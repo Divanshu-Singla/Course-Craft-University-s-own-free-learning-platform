@@ -5,14 +5,25 @@ const mongoose = require("mongoose");
 
 const getAdminStats = async (req, res) => {
   try {
-    const totalUsers = await User.countDocuments();
+    console.log("Fetching admin stats...");
+    
+    // Count users excluding admins
+    const totalUsers = await User.countDocuments({ role: { $ne: "admin" } });
+    console.log("Total Users (non-admin):", totalUsers);
+    
     const totalCourses = await Course.countDocuments();
+    console.log("Total Courses:", totalCourses);
+    
     const totalExams = await Exam.countDocuments();
+    console.log("Total Exams:", totalExams);
 
-    res.json({ totalUsers, totalCourses, totalExams });
+    const stats = { totalUsers, totalCourses, totalExams };
+    console.log("Sending stats:", stats);
+    
+    res.status(200).json(stats);
   } catch (error) {
     console.error("Error fetching admin stats:", error);
-    res.status(500).json({ message: "Failed to fetch admin stats" });
+    res.status(500).json({ message: "Failed to fetch admin stats", error: error.message });
   }
 };
 

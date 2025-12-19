@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState } from 'react';
+import React, { createContext, useContext, useState, useCallback } from 'react';
 import axios from 'axios';
 import Cookies from 'js-cookie';
 
@@ -20,27 +20,39 @@ export const AdminProvider = ({ children }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  const fetchAdminStats = async () => {
+  const fetchAdminStats = useCallback(async () => {
     try {
+      console.log("Fetching admin stats from frontend...");
       setLoading(true);
       setError(null);
       const token = Cookies.get('token');
-      const response = await axios.get("/api/admin/stats", {
+      console.log("Token:", token ? "Present" : "Missing");
+      
+      const response = await axios.get("http://localhost:5000/api/admin/stats", {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
-      setTotalUsers(response.data.totalUsers);
-      setTotalCourses(response.data.totalCourses);
-      setTotalExams(response.data.totalExams);
+      
+      console.log("Stats received:", response.data);
+      setTotalUsers(response.data.totalUsers || 0);
+      setTotalCourses(response.data.totalCourses || 0);
+      setTotalExams(response.data.totalExams || 0);
       setBannedUsers(response.data.bannedUsers || []);
+      console.log("State updated with:", {
+        totalUsers: response.data.totalUsers,
+        totalCourses: response.data.totalCourses,
+        totalExams: response.data.totalExams
+      });
       setLoading(false);
       return response.data;
     } catch (error) {
+      console.error("Error fetching admin stats:", error);
+      console.error("Error response:", error.response?.data);
       setLoading(false);
       setError(error.response?.data?.message || "Failed to fetch stats");
       throw error;
     }
-  };
+  }, []);
 
   const banUser = async (userId) => {
     try {

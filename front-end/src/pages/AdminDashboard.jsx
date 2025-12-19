@@ -7,8 +7,13 @@ const AdminDashboard = () => {
   const { totalUsers, totalCourses, totalExams, loading, error, fetchAdminStats } = useAdmin();
 
   useEffect(() => {
-    fetchAdminStats();
-  }, [fetchAdminStats]);
+    console.log("AdminDashboard mounted, fetching stats...");
+    fetchAdminStats().catch(err => {
+      console.error("Failed to fetch stats:", err);
+    });
+  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+
+  console.log("Rendering with stats:", { totalUsers, totalCourses, totalExams, loading, error });
 
   return (
     <div className="flex min-h-screen bg-gray-100">
