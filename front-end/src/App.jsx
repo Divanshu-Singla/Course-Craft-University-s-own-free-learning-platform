@@ -31,6 +31,7 @@ const AdminDashboard = lazy(() => import("./pages/AdminDashboard.jsx"));
 const AllCourses = lazy(() => import("./components/AllCourses.jsx"));
 const TrainerExams = lazy(() => import("./components/TrainerExams.jsx"));
 const TrainerCourses = lazy(() => import("./components/TrainerCourses.jsx"));
+const NewsPage = lazy(() => import("./pages/NewsPage.jsx"));
 
 // Full-Page Loading Screen
 const LoadingScreen = () => (
@@ -75,6 +76,7 @@ function App() {
           <Route path="/updateUser" element={<UpdateUserDetails />} />
           <Route path="/create-exam" element={<CreateExam />} />
           <Route path="/exams" element={<ExamList />} />
+          <Route path="/news" element={<NewsPage />} />
           <Route path="/about-us" element={<AboutUsPage />} />
           <Route path="/contact" element={<ContactPage />} />
           <Route path="/exam/start/:examId" element={<StartExam />} />

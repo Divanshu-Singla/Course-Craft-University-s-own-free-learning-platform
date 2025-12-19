@@ -83,6 +83,7 @@ function Navbar() {
               <Link to="/exams" className="hover:text-blue-600 transition-all font-medium">Exams</Link>
             )}
 
+            <Link to="/news" className="hover:text-blue-600 transition-all font-medium">News</Link>
             <Link to="/about-us" className="hover:text-blue-600 transition-all font-medium">About Us</Link>
             <Link to="/contact" className="hover:text-blue-600 transition-all font-medium">Contact</Link>
 
@@ -168,6 +169,9 @@ function Navbar() {
               </Link>
             )}
 
+            <Link to="/news" className="text-lg font-medium hover:text-blue-600" onClick={() => setMenuOpen(false)}>
+              News
+            </Link>
             <Link to="/about-us" className="text-lg font-medium hover:text-blue-600" onClick={() => setMenuOpen(false)}>
               About Us
             </Link>
