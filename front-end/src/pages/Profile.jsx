@@ -192,7 +192,7 @@ const Profile = () => {
           </motion.div>
         )}
 
-        {(currentUser.role === "examinee" || currentUser.role === "learner") && results?.length > 0 && (
+        {currentUser.role === "learner" && results?.length > 0 && (
           <ExamResults results={results} />
           
         )}

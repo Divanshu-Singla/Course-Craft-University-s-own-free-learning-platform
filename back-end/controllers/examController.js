@@ -320,9 +320,9 @@ exports.enrollExam = async (req, res) => {
       return res.status(404).json({ success: false, message: "User not found" });
     }
 
-    // ✅ Check if user is a learner or examinee (Fixed Condition)
-    if (user.role !== "learner" && user.role !== "examinee") {
-      return res.status(403).json({ success: false, message: "Only learners and examinees can enroll in exams" });
+    // ✅ Check if user is a learner
+    if (user.role !== "learner") {
+      return res.status(403).json({ success: false, message: "Only learners can enroll in exams" });
     }
 
     // ✅ Check if already enrolled

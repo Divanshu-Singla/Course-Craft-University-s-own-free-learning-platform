@@ -45,10 +45,10 @@ router.delete("/:courseId", protect(["trainer","admin"]), deleteCourse);
 
 
 // ✅ Enroll in a Course (Learner Only)
-router.post("/enroll/:courseId", protect(["learner","trainer","admin","examinee"]), enrollCourse);
+router.post("/enroll/:courseId", protect(["learner","trainer","admin"]), enrollCourse);
 
 // ✅ Get Enrolled Courses for Learner
-router.get("/enrolled", protect(["learner","trainer","admin","examinee"]), getEnrolledCourses);
+router.get("/enrolled", protect(["learner","trainer","admin"]), getEnrolledCourses);
 
 // ✅ Partial Update Course (Trainer & Admin Only)
 router.patch("/:courseId", protect(["admin", "trainer"]), async (req, res, next) => {

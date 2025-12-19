@@ -152,7 +152,6 @@ function Register({ isOpen, onClose, onLoginClick }) {
                       required
                     >
                       <option value="learner">Learner</option>
-                      <option value="examinee">Examinee</option>
                       <option value="trainer">Trainer</option>
                       <option value="admin">Admin</option>
                     </select>

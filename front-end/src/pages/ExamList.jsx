@@ -182,8 +182,7 @@ const ExamList = () => {
                   </div>
 
                   {/* Action Button */}
-                  {(user?.role === "examinee" ||
-                    user?.role === "trainer" ||
+                  {(user?.role === "trainer" ||
                     user?.role === "learner" ||
                     user?.role === "admin") ? (
                     <button
