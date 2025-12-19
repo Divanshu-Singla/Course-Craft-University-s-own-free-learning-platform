@@ -13,8 +13,6 @@ const CoursesList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    const [typeFilter, setTypeFilter] = useState("");
-    const [durationFilter, setDurationFilter] = useState("");
     const [levelFilter, setLevelFilter] = useState("");
 
     useEffect(() => {
@@ -37,16 +35,6 @@ const CoursesList = () => {
             );
         }
 
-        if (durationFilter) {
-            filtered = filtered.filter((course) => {
-                const duration = course.duration;
-                if (durationFilter === "short") return duration <= 2;
-                if (durationFilter === "medium") return duration > 2 && duration <= 5;
-                if (durationFilter === "long") return duration > 5;
-                return true;
-            });
-        }
-
         if (levelFilter) {
             filtered = filtered.filter((course) =>
                 course.courseLevel.toLowerCase() === levelFilter.toLowerCase()
@@ -56,7 +44,7 @@ const CoursesList = () => {
         setFilteredCourses(filtered);
         setCurrentPage(1);
         window.scrollTo({ top: 0, behavior: "smooth" });
-    }, [courses, searchQuery, typeFilter, durationFilter, levelFilter]);
+    }, [courses, searchQuery, levelFilter]);
 
     const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
     const currentCourses = filteredCourses.slice(
@@ -108,47 +96,43 @@ const CoursesList = () => {
                 animate={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5 }}
             >
-                <div className="flex justify-end mb-4">
-                    <button
-                        onClick={() => {
-                            setDurationFilter("");
-                            setLevelFilter("");
-                        }}
-                        className="w-10 h-10 bg-red-500 hover:bg-red-600 text-white rounded-full flex items-center justify-center shadow-md"
-                        title="Reset Filters"
-                    >
-                        ↺
-                    </button>
+                <div className="mb-4">
+                    <label className="block text-gray-700 font-medium">Filter by Level</label>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div>
-                        <label className="block text-gray-700 font-medium mb-1">⏳ Duration</label>
-                        <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={durationFilter}
-                            onChange={(e) => setDurationFilter(e.target.value)}
-                        >
-                            <option value="">All</option>
-                            <option value="short">0-2 hours</option>
-                            <option value="medium">2-5 hours</option>
-                            <option value="long">5+ hours</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-medium mb-1">📚 Level</label>
-                        <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={levelFilter}
-                            onChange={(e) => setLevelFilter(e.target.value)}
-                        >
-                            <option value="">All</option>
-                            <option value="beginner">Beginner</option>
-                            <option value="intermediate">Intermediate</option>
-                            <option value="advance">Advance</option>
-                        </select>
-                    </div>
+                <div className="flex gap-4">
+                    <button
+                        onClick={() => setLevelFilter("")}
+                        className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                            levelFilter === "" ? "bg-blue-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        }`}
+                    >
+                        All
+                    </button>
+                    <button
+                        onClick={() => setLevelFilter("beginner")}
+                        className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                            levelFilter === "beginner" ? "bg-green-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        }`}
+                    >
+                        Beginner
+                    </button>
+                    <button
+                        onClick={() => setLevelFilter("intermediate")}
+                        className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                            levelFilter === "intermediate" ? "bg-yellow-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        }`}
+                    >
+                        Intermediate
+                    </button>
+                    <button
+                        onClick={() => setLevelFilter("advance")}
+                        className={`flex-1 px-4 py-2 rounded-lg font-medium transition-all ${
+                            levelFilter === "advance" ? "bg-red-600 text-white" : "bg-gray-200 text-gray-700 hover:bg-gray-300"
+                        }`}
+                    >
+                        Advanced
+                    </button>
                 </div>
             </motion.div>
 

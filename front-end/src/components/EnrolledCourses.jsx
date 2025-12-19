@@ -63,9 +63,6 @@ const EnrolledCourses = ({ enrolledCourses }) => {
                 <div>
                   <h4 className="text-lg font-semibold text-gray-800 mb-1">{course.title}</h4>
                   <p className="text-sm text-gray-600 mb-2 line-clamp-3">{course.description}</p>
-                  <p className="text-xs text-green-600">
-                    Enrolled on: {new Date(course.enrolledDate).toLocaleDateString()}
-                  </p>
 
                   <div className="mt-3">
                     <div className="flex justify-between items-center text-xs text-gray-600 mb-1">

@@ -129,8 +129,8 @@ const CourseDetails = () => {
                 >
                   Continue Learning →
                 </button>
-                <div className="mt-4 bg-white bg-opacity-20 p-3 rounded-lg">
-                  <div className="flex justify-between items-center text-sm mb-2">
+                <div className="mt-3 bg-white bg-opacity-20 px-3 py-2 rounded-lg">
+                  <div className="flex justify-between items-center text-sm mb-1.5 text-gray-900">
                     <span className="font-semibold">Course Progress</span>
                     <span className="font-bold">
                       {courseProgress.totalCompleted || 0} / {selectedCourse.lessons?.length || 0} Lessons
