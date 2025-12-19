@@ -2,6 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import { useCourse } from "../contexts/CourseContext";
 import { useAuth } from "../contexts/AuthContext";
+import CourseProgressBar from "../components/CourseProgressBar";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -11,6 +14,7 @@ const CourseDetails = () => {
   const [showLessons, setShowLessons] = useState(false);
   const [expandedSyllabusIndex, setExpandedSyllabusIndex] = useState(null);
   const [selectedLesson, setSelectedLesson] = useState(null);
+  const [courseProgress, setCourseProgress] = useState({ completedLessons: [], progressPercentage: 0 });
 
   useEffect(() => {
     if (id) {
@@ -27,6 +31,39 @@ const CourseDetails = () => {
       });
     }
   }, [token]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  useEffect(() => {
+    const isEnrolled = enrolledCourses?.some(course => course._id === id);
+    if (token && id && isEnrolled) {
+      fetchProgress();
+    }
+  }, [token, id, enrolledCourses]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  const fetchProgress = async () => {
+    try {
+      const token = Cookies.get("token");
+      const response = await axios.get(`http://localhost:5000/api/users/progress/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setCourseProgress(response.data.progress);
+    } catch (error) {
+      console.error("Error fetching progress:", error);
+    }
+  };
+
+  const markLessonComplete = async (lessonId) => {
+    try {
+      const token = Cookies.get("token");
+      await axios.post(
+        "http://localhost:5000/api/users/progress/lesson-complete",
+        { courseId: id, lessonId },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      await fetchProgress();
+    } catch (error) {
+      console.error("Error marking lesson complete:", error);
+    }
+  };
 
   if (loading) return <p className="text-center text-lg">Loading course details...</p>;
   if (error) return <p className="text-red-500 text-center">{error}</p>;
@@ -114,9 +151,24 @@ const CourseDetails = () => {
           <div className="mt-4">
             <div className="text-lg font-bold text-white">₹{selectedCourse.price || "449"}</div>
             {isAlreadyEnrolled ? (
-              <button className="bg-white text-blue-700 px-5 py-2 mt-2 font-bold border-2 border-white hover:bg-blue-500 hover:text-white cursor-not-allowed">
-                Already Enrolled
-              </button>
+              <>
+                <button className="bg-white text-blue-700 px-5 py-2 mt-2 font-bold border-2 border-white hover:bg-blue-500 hover:text-white cursor-not-allowed">
+                  Already Enrolled
+                </button>
+                <div className="mt-4 bg-white bg-opacity-20 p-3 rounded-lg">
+                  <div className="flex justify-between items-center text-sm mb-2">
+                    <span className="font-semibold">Course Progress</span>
+                    <span className="font-bold">
+                      {courseProgress.totalCompleted || 0} / {selectedCourse.lessons?.length || 0} Lessons
+                    </span>
+                  </div>
+                  <CourseProgressBar 
+                    progressPercentage={courseProgress.progressPercentage || 0}
+                    completedLessons={courseProgress.totalCompleted || 0}
+                    totalLessons={selectedCourse.lessons?.length || 0}
+                  />
+                </div>
+              </>
             ) : (
               <button
                 onClick={handleEnroll}
@@ -168,6 +220,8 @@ const CourseDetails = () => {
                       const canAccess = isAlreadyEnrolled || isSample;
                       const isSelected = selectedLesson?._id === lesson._id;
 
+                      const isCompleted = courseProgress.completedLessons?.some(l => l._id === lesson._id || l === lesson._id);
+
                       return (
                         <div
                           key={lesson._id}
@@ -180,11 +234,13 @@ const CourseDetails = () => {
                         >
                           <div className="flex items-start gap-3">
                             <div className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center text-sm font-bold ${
-                              isSelected 
+                              isCompleted
+                                ? 'bg-green-600 text-white'
+                                : isSelected 
                                 ? 'bg-blue-600 text-white' 
                                 : 'bg-gray-200 text-gray-600'
                             }`}>
-                              {index + 1}
+                              {isCompleted ? '✓' : index + 1}
                             </div>
                             <div className="flex-1 min-w-0">
                               <h4 className="font-semibold text-gray-900 truncate">
@@ -209,6 +265,11 @@ const CourseDetails = () => {
                                 {!canAccess && (
                                   <span className="text-xs bg-gray-200 text-gray-600 px-2 py-0.5 rounded">
                                     🔒 Locked
+                                  </span>
+                                )}
+                                {isCompleted && (
+                                  <span className="text-xs bg-green-600 text-white px-2 py-0.5 rounded font-semibold">
+                                    ✓ Done
                                   </span>
                                 )}
                               </div>
@@ -261,38 +322,91 @@ const CourseDetails = () => {
                             );
                           }
 
+                          const isLessonCompleted = courseProgress.completedLessons?.some(l => l._id === selectedLesson._id || l === selectedLesson._id);
+
                           if (selectedLesson.videoUrl) {
                             return (
-                              <div className="bg-black rounded-lg overflow-hidden">
-                                <video
-                                  src={selectedLesson.videoUrl}
-                                  controls
-                                  className="w-full h-auto max-h-[500px]"
-                                  controlsList="nodownload"
-                                />
-                              </div>
+                              <>
+                                <div className="bg-black rounded-lg overflow-hidden">
+                                  <video
+                                    src={selectedLesson.videoUrl}
+                                    controls
+                                    className="w-full h-auto max-h-[500px]"
+                                    controlsList="nodownload"
+                                  />
+                                </div>
+                                {!isLessonCompleted && (
+                                  <button
+                                    onClick={() => markLessonComplete(selectedLesson._id)}
+                                    className="mt-4 w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-2"
+                                  >
+                                    <span className="text-2xl">✓</span>
+                                    <span>Mark as Complete</span>
+                                  </button>
+                                )}
+                                {isLessonCompleted && (
+                                  <div className="mt-4 w-full bg-gradient-to-r from-green-100 to-green-50 border-2 border-green-600 text-green-800 px-6 py-4 rounded-lg text-center font-bold text-lg shadow-md flex items-center justify-center gap-2">
+                                    <span className="text-2xl">✓</span>
+                                    <span>Lesson Completed</span>
+                                  </div>
+                                )}
+                              </>
                             );
                           }
 
                           if (selectedLesson.imageUrl) {
                             return (
-                              <div className="flex justify-center bg-gray-50 rounded-lg p-4">
-                                <img
-                                  src={selectedLesson.imageUrl}
-                                  alt={selectedLesson.title}
-                                  className="max-w-full h-auto max-h-[500px] rounded-lg shadow-md object-contain"
-                                />
-                              </div>
+                              <>
+                                <div className="flex justify-center bg-gray-50 rounded-lg p-4">
+                                  <img
+                                    src={selectedLesson.imageUrl}
+                                    alt={selectedLesson.title}
+                                    className="max-w-full h-auto max-h-[500px] rounded-lg shadow-md object-contain"
+                                  />
+                                </div>
+                                {!isLessonCompleted && (
+                                  <button
+                                    onClick={() => markLessonComplete(selectedLesson._id)}
+                                    className="mt-4 w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-2"
+                                  >
+                                    <span className="text-2xl">✓</span>
+                                    <span>Mark as Complete</span>
+                                  </button>
+                                )}
+                                {isLessonCompleted && (
+                                  <div className="mt-4 w-full bg-gradient-to-r from-green-100 to-green-50 border-2 border-green-600 text-green-800 px-6 py-4 rounded-lg text-center font-bold text-lg shadow-md flex items-center justify-center gap-2">
+                                    <span className="text-2xl">✓</span>
+                                    <span>Lesson Completed</span>
+                                  </div>
+                                )}
+                              </>
                             );
                           }
 
                           return (
-                            <div className="flex items-center justify-center h-96 bg-gray-100 rounded-lg">
-                              <div className="text-center text-gray-500">
-                                <div className="text-5xl mb-3">📄</div>
-                                <p className="text-lg">No media available for this lesson</p>
+                            <>
+                              <div className="flex items-center justify-center h-96 bg-gray-100 rounded-lg">
+                                <div className="text-center text-gray-500">
+                                  <div className="text-5xl mb-3">📄</div>
+                                  <p className="text-lg">No media available for this lesson</p>
+                                </div>
                               </div>
-                            </div>
+                              {!isLessonCompleted && (
+                                <button
+                                  onClick={() => markLessonComplete(selectedLesson._id)}
+                                  className="mt-4 w-full bg-gradient-to-r from-green-600 to-green-700 text-white px-6 py-4 rounded-lg hover:from-green-700 hover:to-green-800 transition-all font-bold text-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] flex items-center justify-center gap-2"
+                                >
+                                  <span className="text-2xl">✓</span>
+                                  <span>Mark as Complete</span>
+                                </button>
+                              )}
+                              {isLessonCompleted && (
+                                <div className="mt-4 w-full bg-gradient-to-r from-green-100 to-green-50 border-2 border-green-600 text-green-800 px-6 py-4 rounded-lg text-center font-bold text-lg shadow-md flex items-center justify-center gap-2">
+                                  <span className="text-2xl">✓</span>
+                                  <span>Lesson Completed</span>
+                                </div>
+                              )}
+                            </>
                           );
                         })()}
                       </div>

@@ -1,7 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import CourseProgressBar from "./CourseProgressBar";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const EnrolledCourses = ({ enrolledCourses }) => {
+  const [progressData, setProgressData] = useState({});
   const coursesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
 
@@ -11,33 +15,82 @@ const EnrolledCourses = ({ enrolledCourses }) => {
     currentPage * coursesPerPage
   );
 
+  useEffect(() => {
+    const fetchAllProgress = async () => {
+      const token = Cookies.get("token");
+      if (!token) return;
+
+      const progressPromises = enrolledCourses.map(async (course) => {
+        try {
+          const response = await axios.get(`http://localhost:5000/api/users/progress/${course._id}`, {
+            headers: { Authorization: `Bearer ${token}` }
+          });
+          return { courseId: course._id, progress: response.data.progress };
+        } catch (error) {
+          console.error(`Error fetching progress for course ${course._id}:`, error);
+          return { courseId: course._id, progress: { progressPercentage: 0, totalCompleted: 0 } };
+        }
+      });
+
+      const results = await Promise.all(progressPromises);
+      const progressMap = {};
+      results.forEach(({ courseId, progress }) => {
+        progressMap[courseId] = progress;
+      });
+      setProgressData(progressMap);
+    };
+
+    if (enrolledCourses.length > 0) {
+      fetchAllProgress();
+    }
+  }, [enrolledCourses]);
+
   return (
     <div className="mt-8 p-6 bg-gradient-to-r from-blue-50 to-blue-100 rounded-xl shadow-lg">
       <h3 className="text-2xl font-bold text-blue-800 mb-4">📚 My Enrolled Courses</h3>
 
       {currentCourses.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-          {currentCourses.map((course) => (
-            <div
-            key={course._id}
-            className="flex flex-col justify-between p-5 bg-white rounded-xl border border-blue-200 shadow-md hover:shadow-xl transition"
-          >
-            <div>
-              <h4 className="text-lg font-semibold text-gray-800 mb-1">{course.title}</h4>
-              <p className="text-sm text-gray-600 mb-2 line-clamp-3">{course.description}</p>
-              <p className="text-xs text-green-600">
-                ✅ Enrolled on: {new Date(course.enrolledDate).toLocaleDateString()}
-              </p>
-            </div>
-          
-            <Link
-              to={`/CourseDetails/${course._id}`}
-              className="mt-4 self-start px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition"
-            >
-              📖 Go to Course
-            </Link>
-          </div>          
-          ))}
+          {currentCourses.map((course) => {
+            const progress = progressData[course._id] || { progressPercentage: 0, totalCompleted: 0 };
+            const totalLessons = course.lessons?.length || 0;
+
+            return (
+              <div
+                key={course._id}
+                className="flex flex-col justify-between p-5 bg-white rounded-xl border border-blue-200 shadow-md hover:shadow-xl transition"
+              >
+                <div>
+                  <h4 className="text-lg font-semibold text-gray-800 mb-1">{course.title}</h4>
+                  <p className="text-sm text-gray-600 mb-2 line-clamp-3">{course.description}</p>
+                  <p className="text-xs text-green-600">
+                    Enrolled on: {new Date(course.enrolledDate).toLocaleDateString()}
+                  </p>
+
+                  <div className="mt-3">
+                    <div className="flex justify-between items-center text-xs text-gray-600 mb-1">
+                      <span>Progress</span>
+                      <span className="font-semibold">
+                        {progress.totalCompleted || 0} / {totalLessons} Lessons
+                      </span>
+                    </div>
+                    <CourseProgressBar 
+                      progressPercentage={progress.progressPercentage || 0}
+                      completedLessons={progress.totalCompleted || 0}
+                      totalLessons={totalLessons}
+                    />
+                  </div>
+                </div>
+              
+                <Link
+                  to={`/CourseDetails/${course._id}`}
+                  className="mt-4 self-start px-4 py-2 bg-blue-600 text-white rounded-md text-sm hover:bg-blue-700 transition"
+                >
+                  Go to Course
+                </Link>
+              </div>
+            );
+          })}
         </div>
       ) : (
         <p className="text-center text-gray-500 mt-6">You haven't enrolled in any courses yet.</p>

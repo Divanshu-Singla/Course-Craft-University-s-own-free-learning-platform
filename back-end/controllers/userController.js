@@ -330,4 +330,107 @@ const markAllNotificationsAsRead = async (req, res) => {
     }
 };
 
-module.exports = { getUsers, getUserById, getCurrentUser, updateUser, partialUpdateUser, deleteUser, getNotifications, markNotificationAsRead, markAllNotificationsAsRead };
+// Mark lesson as complete
+const markLessonComplete = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { courseId, lessonId } = req.body;
+
+        const user = await User.findById(userId);
+        const Course = require("../models/Course");
+        const course = await Course.findById(courseId).populate("lessons");
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        if (!course) {
+            return res.status(404).json({ message: "Course not found" });
+        }
+
+        // Find or create progress entry for this course
+        let progressEntry = user.courseProgress.find(p => p.courseId.toString() === courseId);
+
+        if (!progressEntry) {
+            progressEntry = {
+                courseId: courseId,
+                completedLessons: [],
+                progressPercentage: 0,
+                lastAccessed: new Date()
+            };
+            user.courseProgress.push(progressEntry);
+        }
+
+        // Add lesson to completed if not already there
+        if (!progressEntry.completedLessons.some(l => l.toString() === lessonId)) {
+            progressEntry.completedLessons.push(lessonId);
+        }
+
+        // Update last accessed lesson
+        progressEntry.lastAccessedLesson = lessonId;
+        progressEntry.lastAccessed = new Date();
+
+        // Calculate progress percentage
+        const totalLessons = course.lessons.length;
+        const completedCount = progressEntry.completedLessons.length;
+        progressEntry.progressPercentage = totalLessons > 0 ? Math.round((completedCount / totalLessons) * 100) : 0;
+
+        await user.save();
+
+        res.status(200).json({
+            success: true,
+            message: "Lesson marked as complete",
+            progress: {
+                completedLessons: progressEntry.completedLessons.length,
+                totalLessons: totalLessons,
+                progressPercentage: progressEntry.progressPercentage
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
+// Get course progress
+const getCourseProgress = async (req, res) => {
+    try {
+        const userId = req.user.id;
+        const { courseId } = req.params;
+
+        const user = await User.findById(userId).populate({
+            path: "courseProgress.completedLessons",
+            model: "Lesson"
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: "User not found" });
+        }
+
+        const progressEntry = user.courseProgress.find(p => p.courseId.toString() === courseId);
+
+        if (!progressEntry) {
+            return res.status(200).json({
+                success: true,
+                progress: {
+                    completedLessons: [],
+                    progressPercentage: 0,
+                    totalCompleted: 0
+                }
+            });
+        }
+
+        res.status(200).json({
+            success: true,
+            progress: {
+                completedLessons: progressEntry.completedLessons,
+                progressPercentage: progressEntry.progressPercentage,
+                totalCompleted: progressEntry.completedLessons.length,
+                lastAccessedLesson: progressEntry.lastAccessedLesson
+            }
+        });
+    } catch (error) {
+        res.status(500).json({ message: "Server Error", error: error.message });
+    }
+};
+
+module.exports = { getUsers, getUserById, getCurrentUser, updateUser, partialUpdateUser, deleteUser, getNotifications, markNotificationAsRead, markAllNotificationsAsRead, markLessonComplete, getCourseProgress };

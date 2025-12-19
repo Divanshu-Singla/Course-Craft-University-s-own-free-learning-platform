@@ -1,5 +1,5 @@
 const express = require("express");
-const { getUsers, getUserById, getCurrentUser, updateUser, partialUpdateUser, deleteUser, getNotifications, markNotificationAsRead, markAllNotificationsAsRead } = require("../controllers/userController");
+const { getUsers, getUserById, getCurrentUser, updateUser, partialUpdateUser, deleteUser, getNotifications, markNotificationAsRead, markAllNotificationsAsRead, markLessonComplete, getCourseProgress } = require("../controllers/userController");
 const { uploadSingle } = require("../middlewares/multerConfig"); // Import multer middleware
 const protect = require("../middlewares/authMiddleware");
 
@@ -16,5 +16,9 @@ router.delete("/:id", protect(["admin", "learner", "trainer", "examinee"]), dele
 router.get("/notifications/all", protect(["admin", "learner", "trainer", "examinee"]), getNotifications);
 router.patch("/notifications/:notificationId/read", protect(["admin", "learner", "trainer", "examinee"]), markNotificationAsRead);
 router.patch("/notifications/mark-all-read", protect(["admin", "learner", "trainer", "examinee"]), markAllNotificationsAsRead);
+
+// Course progress routes
+router.post("/progress/lesson-complete", protect(["admin", "learner", "trainer", "examinee"]), markLessonComplete);
+router.get("/progress/:courseId", protect(["admin", "learner", "trainer", "examinee"]), getCourseProgress);
 
 module.exports = router;

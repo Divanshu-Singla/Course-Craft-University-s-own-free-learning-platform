@@ -39,6 +39,14 @@ const UserSchema = new mongoose.Schema({
         ref: "Course"
     }],
 
+    courseProgress: [{
+        courseId: { type: mongoose.Schema.Types.ObjectId, ref: "Course" },
+        completedLessons: [{ type: mongoose.Schema.Types.ObjectId, ref: "Lesson" }],
+        lastAccessedLesson: { type: mongoose.Schema.Types.ObjectId, ref: "Lesson" },
+        progressPercentage: { type: Number, default: 0 },
+        lastAccessed: { type: Date, default: Date.now }
+    }],
+
     enrolledExams: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: "Exam"
