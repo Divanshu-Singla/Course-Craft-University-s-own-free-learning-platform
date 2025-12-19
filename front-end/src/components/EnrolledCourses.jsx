@@ -25,10 +25,11 @@ const EnrolledCourses = ({ enrolledCourses }) => {
           const response = await axios.get(`http://localhost:5000/api/users/progress/${course._id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
+          console.log(`Progress for ${course.title}:`, response.data.progress);
           return { courseId: course._id, progress: response.data.progress };
         } catch (error) {
           console.error(`Error fetching progress for course ${course._id}:`, error);
-          return { courseId: course._id, progress: { progressPercentage: 0, totalCompleted: 0 } };
+          return { courseId: course._id, progress: { progressPercentage: 0, totalCompleted: 0, completedLessons: [] } };
         }
       });
 
@@ -52,8 +53,9 @@ const EnrolledCourses = ({ enrolledCourses }) => {
       {currentCourses.length > 0 ? (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {currentCourses.map((course) => {
-            const progress = progressData[course._id] || { progressPercentage: 0, totalCompleted: 0 };
+            const progress = progressData[course._id] || { progressPercentage: 0, totalCompleted: 0, completedLessons: [] };
             const totalLessons = course.lessons?.length || 0;
+            const completedCount = progress.completedLessons?.length || progress.totalCompleted || 0;
 
             return (
               <div
@@ -65,15 +67,15 @@ const EnrolledCourses = ({ enrolledCourses }) => {
                   <p className="text-sm text-gray-600 mb-2 line-clamp-3">{course.description}</p>
 
                   <div className="mt-3">
-                    <div className="flex justify-between items-center text-xs text-gray-600 mb-1">
-                      <span>Progress</span>
-                      <span className="font-semibold">
-                        {progress.totalCompleted || 0} / {totalLessons} Lessons
+                    <div className="flex justify-between items-center text-sm text-gray-700 mb-2">
+                      <span className="font-medium">Progress:</span>
+                      <span className="font-bold text-blue-600">
+                        {Math.round(progress.progressPercentage || 0)}%
                       </span>
                     </div>
                     <CourseProgressBar 
                       progressPercentage={progress.progressPercentage || 0}
-                      completedLessons={progress.totalCompleted || 0}
+                      completedLessons={completedCount}
                       totalLessons={totalLessons}
                     />
                   </div>

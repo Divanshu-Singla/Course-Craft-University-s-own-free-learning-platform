@@ -18,6 +18,7 @@ const Profile = () => {
   const [preview, setPreview] = useState(null);
   const [selectedFile, setSelectedFile] = useState(null);
   const [modalOpen, setModalOpen] = useState(false);
+  const [activeTab, setActiveTab] = useState("courses"); // courses, results, certificates
 
   useEffect(() => {
     fetchCurrentUser();
@@ -185,23 +186,76 @@ const Profile = () => {
               {currentUser.organization?.name && <p><strong>Organization:</strong> {currentUser.organization.name}</p>}
               {currentUser.interests && <p><strong>Interests:</strong> {currentUser.interests}</p>}
             </div>
-            {enrolledCourses.length > 0 && (
-              <div className="mt-4">
-                <EnrolledCourses enrolledCourses={enrolledCourses} />
+
+            {/* Tabs Navigation */}
+            <div className="mt-6 border-b border-gray-300">
+              <div className="flex gap-1">
+                <button
+                  onClick={() => setActiveTab("courses")}
+                  className={`px-6 py-3 font-semibold transition-all ${
+                    activeTab === "courses"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                  }`}
+                >
+                  My Enrolled Courses
+                </button>
+                <button
+                  onClick={() => setActiveTab("results")}
+                  className={`px-6 py-3 font-semibold transition-all ${
+                    activeTab === "results"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                  }`}
+                >
+                  Exam Results
+                </button>
+                <button
+                  onClick={() => setActiveTab("certificates")}
+                  className={`px-6 py-3 font-semibold transition-all ${
+                    activeTab === "certificates"
+                      ? "text-blue-600 border-b-2 border-blue-600 bg-blue-50"
+                      : "text-gray-600 hover:text-blue-600 hover:bg-gray-50"
+                  }`}
+                >
+                  My Certificates
+                </button>
               </div>
-            )}
-          </motion.div>
-        )}
+            </div>
 
-        {currentUser.role === "learner" && enrolledCourses.length > 0 && (
-          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.65 }}>
-            <MyCertificates enrolledCourses={enrolledCourses} />
-          </motion.div>
-        )}
+            {/* Tab Content */}
+            <div className="mt-6">
+              {activeTab === "courses" && enrolledCourses.length > 0 && (
+                <EnrolledCourses enrolledCourses={enrolledCourses} />
+              )}
+              {activeTab === "courses" && enrolledCourses.length === 0 && (
+                <div className="text-center py-12 bg-gray-50 rounded-lg">
+                  <p className="text-gray-600 text-lg">No enrolled courses yet</p>
+                  <p className="text-gray-500 text-sm mt-2">Start learning by enrolling in courses!</p>
+                </div>
+              )}
 
-        {currentUser.role === "learner" && results?.length > 0 && (
-          <ExamResults results={results} />
-          
+              {activeTab === "results" && results?.length > 0 && (
+                <ExamResults results={results} />
+              )}
+              {activeTab === "results" && (!results || results.length === 0) && (
+                <div className="text-center py-12 bg-gray-50 rounded-lg">
+                  <p className="text-gray-600 text-lg">No exam results yet</p>
+                  <p className="text-gray-500 text-sm mt-2">Take exams to see your results here!</p>
+                </div>
+              )}
+
+              {activeTab === "certificates" && enrolledCourses.length > 0 && (
+                <MyCertificates enrolledCourses={enrolledCourses} />
+              )}
+              {activeTab === "certificates" && enrolledCourses.length === 0 && (
+                <div className="text-center py-12 bg-gray-50 rounded-lg">
+                  <p className="text-gray-600 text-lg">No certificates yet</p>
+                  <p className="text-gray-500 text-sm mt-2">Complete courses to earn certificates!</p>
+                </div>
+              )}
+            </div>
+          </motion.div>
         )}
 
         {currentUser.role === "trainer" && (

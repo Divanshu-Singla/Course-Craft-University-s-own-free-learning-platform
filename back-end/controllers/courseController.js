@@ -492,7 +492,7 @@ const getEnrolledCourses = async (req, res) => {
 
         // ✅ Get the user with enrolled courses populated
         const user = await User.findById(userId)
-            .populate("enrolledCourses", "title description category trainer")
+            .populate("enrolledCourses", "title description category trainer lessons thumbnail")
             .select("fullName enrolledCourses");
 
         if (!user) {
