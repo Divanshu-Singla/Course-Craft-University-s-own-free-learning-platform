@@ -32,12 +32,11 @@ const TrainerExams = () => {
       </button>
 
       <h2 className="text-3xl font-bold text-center text-purple-800 mb-8">
-        📘 Created Exams
+        Created Exams
       </h2>
 
-      {loading && <p className="text-center text-gray-500">Loading...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
-      {!loading && exams.length === 0 && (
+      {exams.length === 0 && (
         <p className="text-center text-gray-500">No exams created yet.</p>
       )}
 
@@ -63,13 +62,13 @@ const TrainerExams = () => {
                 onClick={() => navigate(`/exams/edit/${exam._id}`)}
                 className="w-full bg-blue-600 text-white py-2 rounded hover:bg-blue-700 transition"
               >
-                ✏️ Edit Exam
+                Edit Exam
               </button>
               <button
                 onClick={() => handleDelete(exam._id)}
                 className="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700 transition"
               >
-                🗑️ Delete Exam
+                Delete Exam
               </button>
             </div>
           </motion.div>

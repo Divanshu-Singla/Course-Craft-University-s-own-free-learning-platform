@@ -50,12 +50,11 @@ const CourseDetails = () => {
     }
   };
   return (
-    <div className="max-w-full mx-auto mt-2 text-white">
+    <div className="max-w-full mx-auto mt-2 text-white mb-10">
 
 
       {/* Header Section */}
-      <div className="grid grid-cols-1 text-white md:grid-cols-5 gap-5 p-6 bg-white shadow-lg border border-gray-200 bg-gradient-to-r from-blue-700 to-blue-500
-">
+      <div className="grid grid-cols-1 text-white md:grid-cols-5 gap-5 p-6 bg-white shadow-lg border border-gray-200 bg-gradient-to-r from-blue-700 to-blue-500">
         {/* Course Information */}
         <div className="col-span-1 md:col-span-3 mt-2 md:mt-0">
           <h1 className="text-2xl md:text-3xl font-bold ">
@@ -66,7 +65,7 @@ const CourseDetails = () => {
           </p>
 
           {/* Additional Details */}
-          <div className="flex items-center gap-4 text-sm mt-3">
+          <div className="flex items-center gap-4 text-sm mt-3 flex-wrap">
             <p>
               <strong>Category:</strong> {selectedCourse.category}
             </p>
@@ -75,9 +74,11 @@ const CourseDetails = () => {
               {selectedCourse.certificationAvailable ? "Yes" : "No"}
             </p>
             <p>
-              <strong>Duration: </strong>{selectedCourse.duration} Hrs
+              <strong>Duration:</strong> {selectedCourse.duration} Hrs
             </p>
-            <p> <strong>Level: </strong> {selectedCourse.level || "Beginner"}</p>
+            <p>
+              <strong>Level:</strong> {selectedCourse.level || "Beginner"}
+            </p>
           </div>
 
           {/* Prerequisites */}
@@ -101,11 +102,10 @@ const CourseDetails = () => {
 
 
       {/* Show Lessons Button */}
-      <div className="mt-6 mx-6">
-
+      <div className="mt-8 mx-6">
         <button
           onClick={handleToggleLessons}
-          className="bg-blue-600 text-white font-bold px-4 py-2 hover:bg-blue-700 transition-all"
+          className="bg-blue-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg"
         >
           {showLessons ? "Hide Lessons" : "Show Lessons"}
         </button>
@@ -231,14 +231,14 @@ const CourseDetails = () => {
       </div>
 
       {/* Syllabus Section */}
-      <div className="mt-8 mx-6">
-        <h3 className="text-3xl font-bold mb-5 text-gray-900">Syllabus</h3>
+      <div className="mt-8 mx-6 mb-8">
+        <h3 className="text-3xl font-bold mb-5 text-gray-900">Course Syllabus</h3>
         <div className="space-y-4">
           {selectedCourse.syllabus && selectedCourse.syllabus.length > 0 ? (
             selectedCourse.syllabus.map((module, index) => (
               <div
                 key={index}
-                className="border border-gray-300 p-5 m-5 rounded-lg bg-gray-50 hover:shadow-md transition-all duration-300"
+                className="border border-gray-300 p-5 rounded-lg bg-white hover:shadow-md transition-all duration-300"
               >
                 <button
                   onClick={() => toggleSyllabus(index)}
@@ -268,12 +268,18 @@ const CourseDetails = () => {
       </div>
 
 
-      <div className="mt-6 mx-6 my-10">
-        <button onClick={() => setIsUpdateModalOpen(true)} className="bg-blue-700 text-white px-4 py-2  hover:bg-blue-800 mr-5">
+      <div className="mt-8 mx-6 mb-8 flex gap-4">
+        <button 
+          onClick={() => setIsUpdateModalOpen(true)} 
+          className="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-blue-700 transition-all duration-300 shadow-lg"
+        >
           Edit Course
         </button>
 
-        <button onClick={handleDeleteCourse} className="bg-blue-700 text-white px-4 py-2  hover:bg-blue-800 ">
+        <button 
+          onClick={handleDeleteCourse} 
+          className="bg-red-600 text-white px-6 py-3 rounded-lg font-semibold hover:bg-red-700 transition-all duration-300 shadow-lg"
+        >
           Delete Course
         </button>
       </div>

@@ -81,6 +81,13 @@ const CreateExam = () => {
 
   return (
     <div className="max-w-3xl mx-auto p-6 my-6 bg-white shadow-lg rounded-lg">
+      <button
+        onClick={() => window.history.back()}
+        className="mb-4 inline-block px-4 py-2 bg-gray-800 text-white rounded hover:bg-gray-900"
+      >
+        ← Back
+      </button>
+      
       <div className="bg-blue-600 text-white p-4 rounded-lg mb-6">
         <h2 className="text-2xl font-bold">Create a New Exam</h2>
         <p className="text-blue-100 mt-1 text-sm">Fill in the details to create your exam</p>
