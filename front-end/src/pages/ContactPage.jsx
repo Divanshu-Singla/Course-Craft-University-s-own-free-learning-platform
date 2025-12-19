@@ -159,20 +159,20 @@ const ContactPage = () => {
           {/* Address */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-bold text-gray-800 mb-2">Address</h3>
-            <p className="text-gray-600">123 Learning Street</p>
-            <p className="text-gray-600">Education City, EC 4567</p>
+            <p className="text-gray-600">Chitkara University,</p>
+            <p className="text-gray-600">Rajpura, Punjab</p>
           </div>
 
           {/* Phone */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-bold text-gray-800 mb-2">Phone</h3>
-            <p className="text-gray-600">+1 (123) 456-7890</p>
+            <p className="text-gray-600">+91 999 999 999</p>
           </div>
 
           {/* Email */}
           <div className="bg-white p-6 rounded-lg shadow-md">
             <h3 className="text-xl font-bold text-gray-800 mb-2">Email</h3>
-            <p className="text-gray-600">info@lms.com</p>
+            <p className="text-gray-600">coursecraft@gmail.com</p>
           </div>
         </div>
       </motion.section>
@@ -196,13 +196,6 @@ const ContactPage = () => {
         </div>
       </motion.section>
 
-      {/* Footer */}
-      <motion.footer
-        className="text-center border-t border-gray-200 pt-8 mt-12"
-        variants={itemVariants}
-      >
-        <p className="text-gray-600">© 2023 LMS. All rights reserved.</p>
-      </motion.footer>
     </motion.div>
   );
 };

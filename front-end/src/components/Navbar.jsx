@@ -83,7 +83,9 @@ function Navbar() {
               <Link to="/exams" className="hover:text-blue-600 transition-all font-medium">Exams</Link>
             )}
 
-            {/* Search Bar */}
+            <Link to="/about-us" className="hover:text-blue-600 transition-all font-medium">About Us</Link>
+            <Link to="/contact" className="hover:text-blue-600 transition-all font-medium">Contact</Link>
+
             <input
               type="text"
               placeholder="Search for courses..."
@@ -93,7 +95,6 @@ function Navbar() {
               className="px-3 py-2 w-80 rounded-md border border-gray-300 outline-none focus:ring-2 focus:ring-blue-500 transition-all"
             />
 
-            {/* Auth/Dropdown */}
             {user && currentUser ? (
               <div className="relative">
                 <button
@@ -166,6 +167,13 @@ function Navbar() {
                 Exams
               </Link>
             )}
+
+            <Link to="/about-us" className="text-lg font-medium hover:text-blue-600" onClick={() => setMenuOpen(false)}>
+              About Us
+            </Link>
+            <Link to="/contact" className="text-lg font-medium hover:text-blue-600" onClick={() => setMenuOpen(false)}>
+              Contact
+            </Link>
 
             <input
               type="text"
