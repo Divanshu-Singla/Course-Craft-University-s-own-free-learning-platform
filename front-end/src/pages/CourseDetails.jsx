@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useCourse } from "../contexts/CourseContext";
 import { useAuth } from "../contexts/AuthContext";
 import CourseProgressBar from "../components/CourseProgressBar";
+import CertificateButton from "../components/CertificateButton";
 import axios from "axios";
 import Cookies from "js-cookie";
 
@@ -164,6 +165,13 @@ const CourseDetails = () => {
           />
         </div>
       </div>
+
+      {/* Certificate Section */}
+      {isAlreadyEnrolled && (
+        <div className="mt-8 mx-6">
+          <CertificateButton courseId={id} courseName={selectedCourse.title} />
+        </div>
+      )}
 
       {/* Course Content Overview */}
       <div className="mt-8 mx-6">

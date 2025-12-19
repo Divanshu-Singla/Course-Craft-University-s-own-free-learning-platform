@@ -5,6 +5,7 @@ import { useExam } from "../contexts/ExamContext";
 import { Link } from "react-router-dom";
 import EnrolledCourses from "../components/EnrolledCourses";
 import ExamResults from "../components/ExamResults";
+import MyCertificates from "../components/MyCertificates";
 import Notifications from "../components/Notifications";
 import { motion } from "framer-motion";
 import ChangePasswordModal from "./ChangePassword";
@@ -189,6 +190,12 @@ const Profile = () => {
                 <EnrolledCourses enrolledCourses={enrolledCourses} />
               </div>
             )}
+          </motion.div>
+        )}
+
+        {currentUser.role === "learner" && enrolledCourses.length > 0 && (
+          <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }} transition={{ delay: 0.65 }}>
+            <MyCertificates enrolledCourses={enrolledCourses} />
           </motion.div>
         )}
 
