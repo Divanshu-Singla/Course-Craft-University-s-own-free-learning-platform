@@ -160,101 +160,110 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
                 transition={{ duration: 0.3 }}
                 className="bg-white w-full max-w-4xl max-h-[90vh] overflow-y-auto rounded-xl p-6 shadow-2xl"
             >
-                <div className="flex justify-between items-center mb-4">
-                    <h2 className="text-2xl font-bold">Update Course</h2>
-                    <button onClick={onClose} className="text-gray-500 hover:text-gray-700 text-xl">
-                        &times;
-                    </button>
+                {/* Header Section */}
+                <div className="bg-blue-600 text-white p-4 rounded-lg mb-6">
+                    <div className="flex justify-between items-center">
+                        <div>
+                            <h2 className="text-2xl font-bold">Update Course</h2>
+                            <p className="text-blue-100 mt-1 text-sm">Modify course details and content</p>
+                        </div>
+                        <button onClick={onClose} className="text-white hover:text-blue-100 text-2xl font-bold">
+                            &times;
+                        </button>
+                    </div>
                 </div>
 
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} className="space-y-4">
                     {/* Title */}
-                    <div className="mb-3">
-                        <label className="block text-sm font-medium">Title</label>
-                        <input type="text" name="title" value={updatedData.title} onChange={handleChange} className="w-full p-2 border rounded-md" required />
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Course Title</label>
+                        <input type="text" name="title" value={updatedData.title} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition" placeholder="Enter course title" required />
                     </div>
 
-                    {/* Category */}
-                    <div className="mb-3">
-                        <label className="block text-sm font-medium">Category</label>
-                        <input type="text" name="category" value={updatedData.category} onChange={handleChange} className="w-full p-2 border rounded-md" required />
-                    </div>
+                    {/* Category, Duration, Level */}
+                    <div className="grid md:grid-cols-3 gap-4">
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+                            <input type="text" name="category" value={updatedData.category} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition" placeholder="e.g., Programming" required />
+                        </div>
+                        
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Duration</label>
+                            <input type="text" name="duration" value={updatedData.duration} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition" placeholder="e.g., 6 weeks" required />
+                        </div>
 
-                    {/* Duration */}
-                    <div className="mb-3">
-                        <label className="block text-sm font-medium">Duration (e.g., 6 weeks)</label>
-                        <input type="text" name="duration" value={updatedData.duration} onChange={handleChange} className="w-full p-2 border rounded-md" required />
-                    </div>
-
-                    {/* Level */}
-                    <div className="mb-3">
-                        <label className="block text-sm font-medium">Level</label>
-                        <select name="level" value={updatedData.level} onChange={handleChange} className="w-full p-2 border rounded-md">
-                            <option value="Beginner">Beginner</option>
-                            <option value="Intermediate">Intermediate</option>
-                            <option value="Advanced">Advanced</option>
-                        </select>
+                        <div>
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Level</label>
+                            <select name="level" value={updatedData.level} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition">
+                                <option value="Beginner">Beginner</option>
+                                <option value="Intermediate">Intermediate</option>
+                                <option value="Advanced">Advanced</option>
+                            </select>
+                        </div>
                     </div>
 
                     {/* Prerequisites */}
-                    <div className="mb-3">
-                        <label className="block text-sm font-medium">Prerequisites</label>
-                        <input type="text" name="prerequisites" value={updatedData.prerequisites} onChange={handleChange} className="w-full p-2 border rounded-md" />
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Prerequisites</label>
+                        <input type="text" name="prerequisites" value={updatedData.prerequisites} onChange={handleChange} className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition" placeholder="Enter prerequisites (optional)" />
                     </div>
 
                     {/* Certification Available */}
-                    <div className="mb-3 flex items-center">
-                        <input type="checkbox" name="certificationAvailable" checked={updatedData.certificationAvailable} onChange={handleChange} className="mr-2" />
-                        <label className="text-sm">Certification Available</label>
+                    <div className="flex items-center p-3 bg-blue-50 border border-blue-200 rounded-lg">
+                        <input type="checkbox" name="certificationAvailable" checked={updatedData.certificationAvailable} onChange={handleChange} className="mr-3 h-4 w-4 text-blue-600 focus:ring-2 focus:ring-blue-500" />
+                        <label className="text-sm font-semibold text-gray-700">Certification Available</label>
                     </div>
 
                     {/* Thumbnail Upload */}
-                    <div className="mb-3">
-                        <label className="block text-sm font-medium">Thumbnail</label>
-                        <input type="file" accept="image/*" onChange={handleThumbnailChange} className="w-full p-2 border rounded-md" />
-                        {thumbnailPreview && <img src={thumbnailPreview} alt="Thumbnail Preview" className="mt-2 w-32 h-32 object-cover rounded-md" />}
+                    <div className="border-t pt-4">
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Course Thumbnail</label>
+                        <input type="file" accept="image/*" onChange={handleThumbnailChange} className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" />
+                        {thumbnailPreview && <img src={thumbnailPreview} alt="Thumbnail Preview" className="mt-3 w-40 h-40 object-cover rounded-lg border-2 border-blue-200" />}
                     </div>
                     {/* Lessons Section */}
-                    <div className="mt-4">
-                        <h3 className="text-lg font-semibold mb-2">Lessons</h3>
+                    <div className="border-t pt-4">
+                        <h3 className="text-lg font-bold text-gray-800 mb-3">Lessons</h3>
 
                         {updatedData.lessons.map((lesson, index) => (
-                            <div key={index} className="mb-4 p-3 border rounded-lg bg-gray-100">
-                                <div className="flex justify-between items-center">
-                                    <h4 className="text-md font-semibold">Lesson {index + 1}</h4>
+                            <div key={index} className="mb-3 p-4 border border-green-200 rounded-lg bg-green-50">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h4 className="text-sm font-semibold text-green-800">Lesson {index + 1}</h4>
                                     <button
                                         type="button"
                                         onClick={() => removeLesson(index)}
-                                        className="text-red-500 text-sm"
+                                        className="text-red-600 hover:text-red-800 text-sm font-semibold transition"
                                     >
                                         Remove
                                     </button>
                                 </div>
 
-                                <label className="block text-sm font-medium">Lesson Title</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Lesson Title</label>
                                 <input
                                     type="text"
                                     value={lesson.title}
                                     onChange={(e) => handleLessonChange(index, "title", e.target.value)}
-                                    className="w-full p-2 border rounded-md mb-2"
+                                    className="w-full px-3 py-2 rounded-lg border border-green-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition mb-2"
+                                    placeholder="Enter lesson title"
                                 />
 
-                                <label className="block text-sm font-medium">Lesson Description</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Lesson Description</label>
                                 <textarea
                                     value={lesson.description}
                                     onChange={(e) => handleLessonChange(index, "description", e.target.value)}
-                                    className="w-full p-2 border rounded-md mb-2"
+                                    className="w-full px-3 py-2 rounded-lg border border-green-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition mb-2 resize-none"
+                                    rows="3"
+                                    placeholder="Enter lesson description"
                                 />
 
-                                <label className="block text-sm font-medium">Upload Lesson Video</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Upload Lesson Video</label>
                                 <input
                                     type="file"
                                     accept="video/*"
                                     onChange={(e) => handleVideoChange(index, e)}
-                                    className="w-full p-2 border rounded-md"
+                                    className="w-full px-3 py-2 rounded-lg border border-green-300 focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                                 />
                                 {lessonVideoPreviews[index] && (
-                                    <video src={lessonVideoPreviews[index]} controls className="mt-2 w-48 rounded-md" />
+                                    <video src={lessonVideoPreviews[index]} controls className="mt-3 w-full max-w-md rounded-lg border-2 border-green-300" />
                                 )}
                             </div>
                         ))}
@@ -262,61 +271,62 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
                         <button
                             type="button"
                             onClick={() => addLesson()}
-                            className="bg-green-500 text-white text-sm px-3 py-1 rounded-md"
+                            className="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
                         >
                             Add Lesson
                         </button>
                     </div>
                     {/* Syllabus Section */}
-                    {updatedData.syllabus.map((item, index) => (
-                        <div key={index} className="mb-4 border p-3 rounded-lg">
-                            <div className="flex justify-between items-center">
-                                <h3 className="text-lg font-semibold">Module {index + 1}</h3>
-                                <button
-                                    type="button"
-                                    onClick={() => removeSyllabus(index)}
-                                    className="text-red-500 text-sm"
-                                >
-                                    Remove
-                                </button>
+                    <div className="border-t pt-4">
+                        <h3 className="text-lg font-bold text-gray-800 mb-3">Course Syllabus</h3>
+                        {updatedData.syllabus.map((item, index) => (
+                            <div key={index} className="mb-3 p-4 border border-blue-200 rounded-lg bg-blue-50">
+                                <div className="flex justify-between items-center mb-2">
+                                    <h4 className="text-sm font-semibold text-blue-800">Module {index + 1}</h4>
+                                    <button
+                                        type="button"
+                                        onClick={() => removeSyllabus(index)}
+                                        className="text-red-600 hover:text-red-800 text-sm font-semibold transition"
+                                    >
+                                        Remove
+                                    </button>
+                                </div>
+
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Module Title</label>
+                                <input
+                                    type="text"
+                                    value={item.title}
+                                    onChange={(e) => handleSyllabusChange(index, "title", e.target.value)}
+                                    className="w-full px-3 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition mb-2"
+                                    placeholder="Enter module title"
+                                />
+
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Module Description</label>
+                                <textarea
+                                    value={item.description}
+                                    onChange={(e) => handleSyllabusChange(index, "description", e.target.value)}
+                                    className="w-full px-3 py-2 rounded-lg border border-blue-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition resize-none"
+                                    rows="3"
+                                    placeholder="Enter module description"
+                                />
                             </div>
+                        ))}
 
-                            {/* Module Title Input */}
-                            <label className="block text-sm font-medium">Module Title</label>
-                            <input
-                                type="text"
-                                value={item.title}
-                                onChange={(e) => handleSyllabusChange(index, "title", e.target.value)}
-                                className="w-full p-2 border rounded-md"
-                                placeholder="Enter module title"
-                            />
-
-                            {/* Module Description Input */}
-                            <label className="block text-sm font-medium mt-2">Module Description</label>
-                            <textarea
-                                value={item.description}
-                                onChange={(e) => handleSyllabusChange(index, "description", e.target.value)}
-                                className="w-full p-2 border rounded-md"
-                                placeholder="Enter module description"
-                            />
-                        </div>
-                    ))}
-
-                    {/* Add New Module Button */}
-                    <button
-                        type="button"
-                        onClick={addSyllabus}
-                        className="bg-blue-500 text-white text-sm px-3 py-1 rounded-md mb-4"
-                    >
-                        Add Module
-                    </button>
+                        <button
+                            type="button"
+                            onClick={addSyllabus}
+                            className="px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition mb-4"
+                        >
+                            Add Module
+                        </button>
+                    </div>
 
                     {/* Submit Buttons */}
-                    <div className="flex justify-end gap-2 mt-4">
-                        <button type="button" onClick={onClose} className="px-4 py-2 bg-gray-500 text-white rounded-md">
+                    <div className="flex justify-end gap-3 pt-4 border-t">
+                        <button type="button" onClick={onClose} className="px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition">
                             Cancel
                         </button>
-                        <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-md">
+                        <button type="submit" className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition">
                             Save Changes
                         </button>
                     </div>

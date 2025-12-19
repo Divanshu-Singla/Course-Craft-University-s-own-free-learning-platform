@@ -80,13 +80,10 @@ const CreateExam = () => {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-8 bg-gradient-to-br from-white to-blue-50 rounded-2xl my-10 shadow-2xl border border-blue-100">
-      {/* Header Section */}
-      <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-6 rounded-xl mb-8 shadow-lg">
-        <h2 className="text-4xl font-bold">
-          Create New Exam
-        </h2>
-        <p className="text-blue-100 mt-2">Design your exam with custom questions and settings</p>
+    <div className="max-w-3xl mx-auto p-6 my-6 bg-white shadow-lg rounded-lg">
+      <div className="bg-blue-600 text-white p-4 rounded-lg mb-6">
+        <h2 className="text-2xl font-bold">Create a New Exam</h2>
+        <p className="text-blue-100 mt-1 text-sm">Fill in the details to create your exam</p>
       </div>
 
       {/* Alert Message */}
@@ -100,15 +97,11 @@ const CreateExam = () => {
         </div>
       )}
 
-      {/* Form Section */}
-      <form onSubmit={handleSubmit} className="space-y-8">
-        {/* Exam Details */}
+      <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <label className="block text-lg font-semibold text-gray-800 mb-2">
-            Exam Title
-          </label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1">Exam Title</label>
           <input
-            className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+            className="w-full px-3 py-2 rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
             type="text"
             name="title"
             placeholder="e.g., JavaScript Advanced Test"
@@ -118,13 +111,11 @@ const CreateExam = () => {
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-lg font-semibold text-gray-800 mb-2">
-              Subject
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Subject</label>
             <input
-              className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+              className="w-full px-3 py-2 rounded border border-gray-300 focus:border-blue-500 focus:outline-none"
               type="text"
               name="subject"
               placeholder="e.g., Computer Science"
@@ -134,11 +125,9 @@ const CreateExam = () => {
             />
           </div>
           <div>
-            <label className="block text-lg font-semibold text-gray-800 mb-2">
-              Category
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Category</label>
             <input
-              className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               type="text"
               name="category"
               placeholder="e.g., Programming, Database"
@@ -149,13 +138,11 @@ const CreateExam = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-lg font-semibold text-gray-800 mb-2">
-              Difficulty Level
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Difficulty Level</label>
             <select
-              className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all bg-white"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
               name="type"
               value={examData.type}
               onChange={handleChange}
@@ -167,11 +154,9 @@ const CreateExam = () => {
             </select>
           </div>
           <div>
-            <label className="block text-lg font-semibold text-gray-800 mb-2">
-              Time Limit (minutes)
-            </label>
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Time Limit (minutes)</label>
             <input
-              className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               type="number"
               name="timeLimit"
               placeholder="e.g., 60"
@@ -182,13 +167,10 @@ const CreateExam = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block text-lg font-semibold text-gray-800 mb-2">
-              Total Marks
-            </label>
-            <input
-              className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+        <div>
+          <label className="block text-sm font-semibold text-gray-700 mb-1">Total Marks</label>
+          <input
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
               type="number"
               name="totalMarks"
               placeholder="e.g., 100"
@@ -196,35 +178,22 @@ const CreateExam = () => {
               onChange={handleChange}
               required
             />
-          </div>
-          <div></div>
         </div>
 
-        {/* Auto-calculated info */}
-        <div className="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-lg">
-          <p className="text-blue-800 font-medium">
-            Number of Questions: <span className="font-bold text-blue-900">{questions.length}</span> (automatically calculated from added questions)
-          </p>
-        </div>
+        <p className="text-sm text-gray-600">
+          Number of Questions: <span className="font-semibold">{questions.length}</span>
+        </p>
 
-        {/* Add Questions Section */}
-        <div className="bg-gradient-to-r from-green-600 to-green-700 text-white p-4 rounded-xl mt-8 shadow-lg">
-          <h3 className="text-2xl font-bold">
-            Exam Questions
-          </h3>
-        </div>
+        <div className="border-t pt-4 mt-6">
+          <h3 className="text-lg font-bold text-gray-800 mb-3">Exam Questions</h3>
 
         {questions.map((q, index) => (
-          <div
-            key={index}
-            className="bg-white p-6 rounded-xl shadow-lg border-2 border-gray-200 hover:border-blue-400 transition-all"
-          >
-            <label className="block text-xl font-bold text-gray-800 mb-3 flex items-center gap-2">
-              <span className="bg-blue-600 text-white w-8 h-8 rounded-full flex items-center justify-center text-sm">{index + 1}</span>
+          <div key={index} className="bg-gray-50 p-4 rounded border border-gray-200">
+            <label className="block text-sm font-semibold text-gray-700 mb-2">
               Question {index + 1}
             </label>
             <input
-              className="input-field w-full px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 mb-2"
               type="text"
               placeholder={`Enter question text (e.g., What is Java?)`}
               value={q.text}
@@ -234,14 +203,15 @@ const CreateExam = () => {
               required
             />
 
-            <div className="grid grid-cols-2 gap-4 mt-5">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">Options</label>
+            <div className="grid grid-cols-2 gap-2">
               {q.options.map((option, optIndex) => (
                 <div key={optIndex}>
-                  <label className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label className="block text-xs text-gray-600 mb-1">
                     Option {String.fromCharCode(65 + optIndex)}
                   </label>
                   <input
-                    className="input-field px-4 py-2 rounded-lg border-2 border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all w-full"
+                    className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500"
                     type="text"
                     placeholder={`Enter option ${String.fromCharCode(65 + optIndex)}`}
                     value={option}
@@ -257,41 +227,37 @@ const CreateExam = () => {
               ))}
             </div>
 
-            {/* Correct Answer Dropdown */}
-            <label className="block text-lg font-semibold text-gray-800 mt-5 mb-2">
-              Correct Answer
-            </label>
-            <select
-              className="input-field px-4 py-3 rounded-lg border-2 border-gray-300 focus:border-green-500 focus:ring-2 focus:ring-green-200 transition-all w-full bg-white"
-              value={q.correctAnswer}
-              onChange={(e) =>
-                handleQuestionChange(index, "correctAnswer", e.target.value)
-              }
-              required
-            >
-              <option value="a">Option A</option>
-              <option value="b">Option B</option>
-              <option value="c">Option C</option>
-              <option value="d">Option D</option>
-            </select>
-          </div>
-        ))}
+              <label className="block text-sm font-semibold text-gray-700 mt-2 mb-1">Correct Answer</label>
+              <select
+                className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 bg-white"
+                value={q.correctAnswer}
+                onChange={(e) =>
+                  handleQuestionChange(index, "correctAnswer", e.target.value)
+                }
+                required
+              >
+                <option value="a">Option A</option>
+                <option value="b">Option B</option>
+                <option value="c">Option C</option>
+                <option value="d">Option D</option>
+              </select>
+            </div>
+          ))}
 
-        {/* Add Another Question Button */}
-        <button
-          type="button"
-          onClick={addQuestionField}
-          className="w-full mt-4 bg-gradient-to-r from-green-500 to-green-600 text-white font-bold px-6 py-4 rounded-xl hover:from-green-600 hover:to-green-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
-        >
-          Add Another Question
-        </button>
+          <button
+            type="button"
+            onClick={addQuestionField}
+            className="w-full mt-2 px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition"
+          >
+            + Add Another Question
+          </button>
+        </div>
 
-        {/* Submit Button */}
         <button
           type="submit"
-          className="w-full bg-gradient-to-r from-blue-600 to-blue-700 text-white font-bold px-6 py-4 rounded-xl hover:from-blue-700 hover:to-blue-800 transition-all shadow-lg hover:shadow-xl transform hover:scale-[1.02]"
+          className="w-full mt-6 px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition"
         >
-          Create Exam & Add Questions
+          Create Exam
         </button>
       </form>
     </div>

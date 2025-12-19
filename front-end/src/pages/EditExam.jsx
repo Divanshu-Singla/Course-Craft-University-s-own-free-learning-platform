@@ -128,29 +128,36 @@ const EditExamPage = () => {
   
 
   return (
-    <div className="container mx-auto p-6">
-      <h2 className="text-2xl font-bold mb-4">Edit Exam</h2>
+    <div className="max-w-3xl mx-auto p-6 my-6 bg-white shadow-lg rounded-lg">
+      {/* Header Section */}
+      <div className="bg-blue-600 text-white p-4 rounded-lg mb-6">
+        <h2 className="text-2xl font-bold">Edit Exam</h2>
+        <p className="text-blue-100 mt-1 text-sm">Update exam details and questions</p>
+      </div>
+
       <form onSubmit={handleSubmit} className="space-y-4">
-        {/* ✅ Exam Details */}
+        {/* Exam Title */}
         <div>
-          <label className="block font-medium">Title</label>
+          <label className="block text-sm font-semibold text-gray-700 mb-1">Exam Title</label>
           <input
             type="text"
             name="title"
             value={examData.title}
             onChange={handleExamChange}
-            className="w-full p-2 border rounded"
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
+            placeholder="Enter exam title"
             required
           />
         </div>
 
-        <div className="grid grid-cols-2 gap-6">
+        {/* Subject and Category */}
+        <div className="grid md:grid-cols-2 gap-4">
           <div>
-            <label className="block text-lg font-medium text-gray-700">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Subject
             </label>
             <input
-              className="input-field px-2 py-1 outline w-full"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
               type="text"
               name="subject"
               placeholder="Enter the subject (e.g., Computer Science)"
@@ -160,11 +167,11 @@ const EditExamPage = () => {
             />
           </div>
           <div>
-            <label className="block text-lg font-medium text-gray-700">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Category
             </label>
             <input
-              className="input-field px-2 py-1 outline w-full"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
               type="text"
               name="category"
               placeholder="Specify the category (e.g., Beginner, Intermediate)"
@@ -174,13 +181,14 @@ const EditExamPage = () => {
             />
           </div>
         </div>
-        <div className="grid grid-cols-3 gap-6">
+        {/* Time, Questions, and Marks */}
+        <div className="grid md:grid-cols-3 gap-4">
           <div>
-            <label className="block text-lg font-medium text-gray-700">
-              Time Limit (in minutes)
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
+              Time Limit (minutes)
             </label>
             <input
-              className="input-field px-2 py-1 outline w-full"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
               type="number"
               name="timeLimit"
               placeholder="Set time limit (e.g., 60)"
@@ -190,11 +198,11 @@ const EditExamPage = () => {
             />
           </div>
           <div>
-            <label className="block text-lg font-medium text-gray-700">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Number of Questions
             </label>
             <input
-              className="input-field px-2 py-1 outline w-full"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
               type="number"
               name="numQuestions"
               placeholder="Enter number of questions (e.g., 20)"
@@ -204,11 +212,11 @@ const EditExamPage = () => {
             />
           </div>
           <div>
-            <label className="block text-lg font-medium text-gray-700">
+            <label className="block text-sm font-semibold text-gray-700 mb-1">
               Total Marks
             </label>
             <input
-              className="input-field px-2 py-1 outline w-full"
+              className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
               type="number"
               name="totalMarks"
               placeholder="Enter total marks (e.g., 100)"
@@ -219,13 +227,13 @@ const EditExamPage = () => {
           </div>
         </div>
 
-        {/* Exam Type Dropdown */}
+        {/* Difficulty Level */}
         <div>
-          <label className="block text-lg font-medium text-gray-700">
+          <label className="block text-sm font-semibold text-gray-700 mb-1">
             Difficulty Level
           </label>
           <select
-            className="input-field px-2 py-1 outline w-full"
+            className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:border-blue-500 focus:outline-none transition"
             name="type"
             value={examData.type}
             onChange={handleExamChange}
@@ -236,75 +244,86 @@ const EditExamPage = () => {
           </select>
         </div>
 
-        {/* ✅ Question Management */}
-        <h3 className="text-xl font-bold mt-6">Questions</h3>
-        {questions.map((question, index) => (
-          <div key={index} className="border p-4 rounded mb-4">
-            <input
-              type="text"
-              placeholder="Enter question text"
-              value={question.text}
-              onChange={(e) =>
-                handleQuestionChange(index, "text", e.target.value)
-              }
-              className="w-full p-2 border rounded mb-2"
-              required
-            />
-            {question.options.map((option, optIndex) => (
+        {/* Questions Section */}
+        <div className="border-t pt-4 mt-4">
+          <h3 className="text-lg font-bold text-gray-800 mb-3">Questions</h3>
+          {questions.map((question, index) => (
+            <div key={index} className="p-4 bg-purple-50 border border-purple-200 rounded-lg mb-3">
+              <div className="flex justify-between items-center mb-2">
+                <h4 className="text-sm font-semibold text-purple-800">Question {index + 1}</h4>
+                <button
+                  type="button"
+                  onClick={() => removeQuestion(index)}
+                  className="text-red-600 hover:text-red-800 text-sm font-semibold transition"
+                >
+                  Remove
+                </button>
+              </div>
+              
               <input
-                key={optIndex}
                 type="text"
-                placeholder={`Option ${optIndex + 1}`}
-                value={option}
-                onChange={(e) => {
-                  const updatedOptions = [...question.options];
-                  updatedOptions[optIndex] = e.target.value;
-                  handleQuestionChange(index, "options", updatedOptions);
-                }}
-                className="w-full p-2 border rounded mb-1"
+                placeholder="Enter question text"
+                value={question.text}
+                onChange={(e) =>
+                  handleQuestionChange(index, "text", e.target.value)
+                }
+                className="w-full px-3 py-2 rounded-lg border border-purple-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition mb-2"
                 required
               />
-            ))}
-            <select
-            value={question.correctOption ?? 0}
-            onChange={(e) =>
-              handleQuestionChange(index, "correctOption", parseInt(e.target.value, 10))
-            }
-            className="w-full p-2 border rounded mb-2"
+              
+              <div className="space-y-1 mb-2">
+                {question.options.map((option, optIndex) => (
+                  <input
+                    key={optIndex}
+                    type="text"
+                    placeholder={`Option ${optIndex + 1}`}
+                    value={option}
+                    onChange={(e) => {
+                      const updatedOptions = [...question.options];
+                      updatedOptions[optIndex] = e.target.value;
+                      handleQuestionChange(index, "options", updatedOptions);
+                    }}
+                    className="w-full px-3 py-2 rounded-lg border border-purple-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition"
+                    required
+                  />
+                ))}
+              </div>
+              
+              <label className="block text-sm font-semibold text-gray-700 mb-1">Correct Option</label>
+              <select
+                value={question.correctOption ?? 0}
+                onChange={(e) =>
+                  handleQuestionChange(index, "correctOption", parseInt(e.target.value, 10))
+                }
+                className="w-full px-3 py-2 rounded-lg border border-purple-300 focus:ring-2 focus:ring-purple-500 focus:border-purple-500 focus:outline-none transition"
+              >
+                {question.options?.map((option, optIndex) => (
+                  <option key={optIndex} value={optIndex}>
+                    {option || `Option ${optIndex + 1}`}
+                  </option>
+                ))}
+              </select>
+            </div>
+          ))}
+        </div>
+
+        {/* Action Buttons */}
+        <div className="flex gap-3 pt-4">
+          <button
+            type="button"
+            onClick={addNewQuestion}
+            className="px-4 py-2 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition"
           >
-            {question.options?.map((option, optIndex) => (
-              <option key={optIndex} value={optIndex}>
-                {option || `Option ${optIndex + 1}`}
-              </option>
-            ))}
-          </select>
+            Add Question
+          </button>
 
-
-            <button
-              type="button"
-              onClick={() => removeQuestion(index)}
-              className="bg-red-500 text-white px-3 py-1 rounded"
-            >
-              Remove Question
-            </button>
-          </div>
-        ))}
-
-        <button
-          type="button"
-          onClick={addNewQuestion}
-          className="bg-blue-600 text-white px-4 py-2 mr-5"
-        >
-          Add New Question
-        </button>
-
-        {/* ✅ Submit Button */}
-        <button
-          type="submit"
-          className="bg-blue-600 text-white px-6 py-2 mt-4"
-        >
-          Save Changes
-        </button>
+          <button
+            type="submit"
+            className="px-6 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition flex-1"
+          >
+            Save Changes
+          </button>
+        </div>
       </form>
     </div>
   );

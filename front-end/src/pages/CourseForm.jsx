@@ -127,106 +127,188 @@ const CourseForm = () => {
     };
 
     return (
-        <div className="max-w-lg mx-auto p-6 my-5 bg-white shadow-lg rounded-lg">
-
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Create a Course</h2>
-
+        <div className="max-w-3xl mx-auto p-6 my-6 bg-white shadow-lg rounded-lg">
+            <div className="bg-blue-600 text-white p-4 rounded-lg mb-6">
+                <h2 className="text-2xl font-bold">Create a New Course</h2>
+                <p className="text-blue-100 mt-1 text-sm">Fill in the details to create your course</p>
+            </div>
 
             <form onSubmit={handleSubmit} className="space-y-4">
-                <input type="text" name="title" placeholder="Title" onChange={handleChange} className="w-full p-2 border rounded" required />
-                <textarea name="description" placeholder="Description" onChange={handleChange} className="w-full p-2 border rounded" required />
-                <input type="text" name="category" placeholder="Category" onChange={handleChange} className="w-full p-2 border rounded" required />
-                <input type="text" name="duration" placeholder="Duration (in hours)" onChange={handleChange} className="w-full p-2 border rounded" required />
-                <input type="text" name="prerequisites" placeholder="Prerequisites" onChange={handleChange} className="w-full p-2 border rounded" />
-                <select
-                    className="w-full p-2 border rounded"
-                    name="courseLevel"
-                    required
-                    value={formData.courseLevel} // ✅ React-controlled state
-                    onChange={handleChange}
-                >
-                    <option value="" disabled hidden>Select Course Level</option>
-                    <option value="Beginner">Beginner</option>
-                    <option value="Intermediate">Intermediate</option>
-                    <option value="Advance">Advance</option>
-                </select>
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Course Title</label>
+                    <input 
+                        type="text" 
+                        name="title" 
+                        placeholder="e.g., Complete Web Development Bootcamp" 
+                        onChange={handleChange} 
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                        required 
+                    />
+                </div>
 
-                <label className="flex items-center space-x-2">
-                    <input type="checkbox" name="certificationAvailable" onChange={handleChange} />
-                    <span>Certification Available</span>
-                </label>
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                    <textarea 
+                        name="description" 
+                        placeholder="Provide a detailed description of the course..." 
+                        onChange={handleChange} 
+                        rows="3"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                        required 
+                    />
+                </div>
 
-                <label className="block">
-                    Thumbnail:
-                    <input type="file" name="thumbnail" accept="image/*" onChange={handleFileChange} required />
-                </label>
-
-                {/* ✅ Syllabus Section */}
-                <h3 className="text-lg font-semibold">Course Syllabus</h3>
-                {syllabus.map((item, index) => (
-                    <div key={index} className="p-4 border rounded mt-2">
-                        <input
-                            type="text"
-                            placeholder="Enter syllabus title (e.g., Introduction to JavaScript)"
-                            value={item.title}
-                            onChange={(e) => handleSyllabusChange(index, "title", e.target.value)}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                        <textarea
-                            placeholder="Provide a brief description of this syllabus"
-                            value={item.description}
-                            onChange={(e) => handleSyllabusChange(index, "description", e.target.value)}
-                            required
-                            className="w-full p-2 border rounded mt-2"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Category</label>
+                        <input 
+                            type="text" 
+                            name="category" 
+                            placeholder="e.g., Programming, Design" 
+                            onChange={handleChange} 
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                            required 
                         />
                     </div>
-                ))}
-                <button
-                    type="button"
-                    onClick={addSyllabusItem}
-                    className="w-full p-2 bg-blue-500 text-white rounded mt-2"
-                >
-                    + Add New Syllabus Section
-                </button>
-
-                {/* ✅ Lessons Section */}
-                <h3 className="text-lg font-semibold mt-6">Course Lessons</h3>
-                {lessons.map((lesson, index) => (
-                    <div key={index} className="p-4 border rounded mt-2">
-                        <input
-                            type="text"
-                            placeholder="Enter lesson title (e.g., Basics of HTML)"
-                            value={lesson.title}
-                            onChange={(e) => handleLessonChange(index, "title", e.target.value)}
-                            required
-                            className="w-full p-2 border rounded"
-                        />
-                        <textarea
-                            placeholder="Provide a detailed description of this lesson"
-                            value={lesson.description}
-                            onChange={(e) => handleLessonChange(index, "description", e.target.value)}
-                            className="w-full p-2 border rounded mt-2"
-                        />
-                        <input
-                            type="file"
-                            accept="video/*,image/*"
-                            onChange={(e) => handleLessonFileChange(index, e.target.files[0])}
-                            className="w-full p-2 mt-2"
+                    <div>
+                        <label className="block text-sm font-semibold text-gray-700 mb-1">Duration (in hours)</label>
+                        <input 
+                            type="text" 
+                            name="duration" 
+                            placeholder="e.g., 40" 
+                            onChange={handleChange} 
+                            className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                            required 
                         />
                     </div>
-                ))}
-                <button
-                    type="button"
-                    onClick={addLesson}
-                    className="w-full p-2 bg-green-500 text-white rounded mt-2"
+                </div>
+
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Prerequisites</label>
+                    <input 
+                        type="text" 
+                        name="prerequisites" 
+                        placeholder="e.g., Basic HTML and CSS knowledge" 
+                        onChange={handleChange} 
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500" 
+                    />
+                </div>
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Course Level</label>
+                    <select
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+                        name="courseLevel"
+                        required
+                        value={formData.courseLevel}
+                        onChange={handleChange}
+                    >
+                        <option value="" disabled hidden>Select Course Level</option>
+                        <option value="Beginner">Beginner</option>
+                        <option value="Intermediate">Intermediate</option>
+                        <option value="Advance">Advance</option>
+                    </select>
+                </div>
+
+                <div className="flex items-center space-x-2 p-3 bg-gray-50 rounded-lg">
+                    <input 
+                        type="checkbox" 
+                        name="certificationAvailable" 
+                        onChange={handleChange} 
+                        className="w-4 h-4 text-blue-600 rounded focus:ring-2 focus:ring-blue-500"
+                    />
+                    <label className="text-sm font-medium text-gray-700">Certification Available</label>
+                </div>
+
+                <div>
+                    <label className="block text-sm font-semibold text-gray-700 mb-1">Course Thumbnail</label>
+                    <input 
+                        type="file" 
+                        name="thumbnail" 
+                        accept="image/*" 
+                        onChange={handleFileChange} 
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-blue-50 file:text-blue-700 hover:file:bg-blue-100"
+                        required 
+                    />
+                </div>
+
+                <div className="border-t pt-4 mt-6">
+                    <h3 className="text-lg font-bold text-gray-800 mb-3">Course Syllabus</h3>
+                    {syllabus.map((item, index) => (
+                        <div key={index} className="p-4 bg-blue-50 border border-blue-200 rounded-lg mt-2">
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Syllabus Title {index + 1}</label>
+                            <input
+                                type="text"
+                                placeholder="e.g., Introduction to JavaScript"
+                                value={item.title}
+                                onChange={(e) => handleSyllabusChange(index, "title", e.target.value)}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 mb-2"
+                            />
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                            <textarea
+                                placeholder="Provide a brief description of this syllabus section"
+                                value={item.description}
+                                onChange={(e) => handleSyllabusChange(index, "description", e.target.value)}
+                                required
+                                rows="2"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+                            />
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={addSyllabusItem}
+                        className="w-full mt-2 px-4 py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
+                    >
+                        + Add New Syllabus Section
+                    </button>
+                </div>
+
+                <div className="border-t pt-4 mt-6">
+                    <h3 className="text-lg font-bold text-gray-800 mb-3">Course Lessons</h3>
+                    {lessons.map((lesson, index) => (
+                        <div key={index} className="p-4 bg-green-50 border border-green-200 rounded-lg mt-2">
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Lesson {index + 1} Title</label>
+                            <input
+                                type="text"
+                                placeholder="e.g., Basics of HTML"
+                                value={lesson.title}
+                                onChange={(e) => handleLessonChange(index, "title", e.target.value)}
+                                required
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2"
+                            />
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Description</label>
+                            <textarea
+                                placeholder="Provide a detailed description of this lesson"
+                                value={lesson.description}
+                                onChange={(e) => handleLessonChange(index, "description", e.target.value)}
+                                rows="2"
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 mb-2"
+                            />
+                            <label className="block text-sm font-semibold text-gray-700 mb-1">Lesson Video/Image</label>
+                            <input
+                                type="file"
+                                accept="video/*,image/*"
+                                onChange={(e) => handleLessonFileChange(index, e.target.files[0])}
+                                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                            />
+                        </div>
+                    ))}
+                    <button
+                        type="button"
+                        onClick={addLesson}
+                        className="w-full mt-2 px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
+                    >
+                        + Add New Lesson
+                    </button>
+                </div>
+
+                <button 
+                    type="submit" 
+                    disabled={loading} 
+                    className="w-full mt-6 px-6 py-3 bg-blue-600 text-white font-bold rounded-lg hover:bg-blue-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
                 >
-                    + Add New Lesson
-                </button>
-
-
-                <button type="submit" disabled={loading} className="w-full p-2 bg-blue-500 text-white rounded">
-                    {loading ? "Creating..." : "Create Course"}
+                    {loading ? "Creating Course..." : "Create Course"}
                 </button>
             </form>
         </div>

@@ -204,15 +204,45 @@ const Profile = () => {
               {currentUser.professionalTitle && <p><strong>Title:</strong> {currentUser.professionalTitle}</p>}
               {currentUser.totalExperience && <p><strong>Experience:</strong> {currentUser.totalExperience} years</p>}
               {currentUser.careerDescription && <p><strong>Career:</strong> {currentUser.careerDescription}</p>}
-              {currentUser.socialLinks?.linkedIn && <p><strong>LinkedIn:</strong> {currentUser.socialLinks.linkedIn}</p>}
-              {currentUser.socialLinks?.github && <p><strong>Github:</strong> {currentUser.socialLinks.github}</p>}
+              {currentUser.socialLinks?.linkedIn && (
+                <p>
+                  <strong>LinkedIn:</strong>{" "}
+                  <a href={currentUser.socialLinks.linkedIn} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">
+                    {currentUser.socialLinks.linkedIn}
+                  </a>
+                </p>
+              )}
+              {currentUser.socialLinks?.github && (
+                <p>
+                  <strong>Github:</strong>{" "}
+                  <a href={currentUser.socialLinks.github} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 underline">
+                    {currentUser.socialLinks.github}
+                  </a>
+                </p>
+              )}
             </div>
 
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mt-4">
-              <Link to="/courseForm"><button className="dashboard-btn">Add Course</button></Link>
-              <Link to="/create-exam"><button className="dashboard-btn">Add Exam</button></Link>
-              <Link to="/trainer-courses"><button className="dashboard-btn">My Courses</button></Link>
-              <Link to="/trainer-exams"><button className="dashboard-btn">My Exams</button></Link>
+              <Link to="/courseForm">
+                <button className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300">
+                  Add Course
+                </button>
+              </Link>
+              <Link to="/create-exam">
+                <button className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300">
+                  Add Exam
+                </button>
+              </Link>
+              <Link to="/trainer-courses">
+                <button className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300">
+                  My Courses
+                </button>
+              </Link>
+              <Link to="/trainer-exams">
+                <button className="w-full px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition-all duration-300">
+                  My Exams
+                </button>
+              </Link>
             </div>
 
             <Notifications />

@@ -56,6 +56,20 @@ const Notifications = () => {
     }
   };
 
+  const deleteNotification = async (notificationId) => {
+    try {
+      const token = Cookies.get("token");
+      await axios.delete(
+        `http://localhost:5000/api/users/notifications/${notificationId}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      setNotifications(notifications.filter(n => n._id !== notificationId));
+    } catch (error) {
+      console.error("Error deleting notification:", error);
+    }
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center py-8">
@@ -103,11 +117,6 @@ const Notifications = () => {
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <div className="flex items-center gap-2 mb-1">
-                    <span className={`text-2xl ${
-                      notification.type === "course_approved" ? "text-green-600" : "text-red-600"
-                    }`}>
-                      {notification.type === "course_approved" ? "✓" : "✗"}
-                    </span>
                     <p className={`font-semibold ${
                       notification.isRead ? "text-gray-700" : "text-gray-900"
                     }`}>
@@ -116,26 +125,34 @@ const Notifications = () => {
                   </div>
                   
                   {notification.reason && (
-                    <div className="ml-8 mt-2 p-2 bg-red-50 border-l-4 border-red-400 rounded">
+                    <div className="mt-2 p-2 bg-red-50 border-l-4 border-red-400 rounded">
                       <p className="text-sm text-red-700">
                         <strong>Reason:</strong> {notification.reason}
                       </p>
                     </div>
                   )}
                   
-                  <p className="text-xs text-gray-500 ml-8 mt-2">
+                  <p className="text-xs text-gray-500 mt-2">
                     {new Date(notification.createdAt).toLocaleString()}
                   </p>
                 </div>
 
-                {!notification.isRead && (
+                <div className="ml-4 flex flex-col gap-2">
+                  {!notification.isRead && (
+                    <button
+                      onClick={() => markAsRead(notification._id)}
+                      className="text-xs text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
+                    >
+                      Mark read
+                    </button>
+                  )}
                   <button
-                    onClick={() => markAsRead(notification._id)}
-                    className="ml-4 text-xs text-blue-600 hover:text-blue-800 font-medium whitespace-nowrap"
+                    onClick={() => deleteNotification(notification._id)}
+                    className="text-xs text-red-600 hover:text-red-800 font-medium whitespace-nowrap"
                   >
-                    Mark read
+                    Delete
                   </button>
-                )}
+                </div>
               </div>
             </div>
           ))}
