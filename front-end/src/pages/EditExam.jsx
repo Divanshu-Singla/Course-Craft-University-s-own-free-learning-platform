@@ -12,7 +12,6 @@ const EditExamPage = () => {
   // ✅ State for exam details
   const [examData, setExamData] = useState({
     title: "",
-    code: "",
     subject: "",
     category: "",
     timeLimit: "",
@@ -35,7 +34,6 @@ const EditExamPage = () => {
           title: selectedExam.title || "",
           duration: selectedExam.duration || 0,
           description: selectedExam.description || "",
-          code: selectedExam.code|| "",
           subject: selectedExam.subject || "",
           category: selectedExam.category || "",
           timeLimit: selectedExam.timeLimit || "",
@@ -146,21 +144,7 @@ const EditExamPage = () => {
           />
         </div>
 
-        <div>
-            <label className="block text-lg font-medium text-gray-700">
-              Exam Code
-            </label>
-            <input
-              className="input-field px-2 py-1 outline w-full"
-              type="text"
-              name="code"
-              placeholder="Enter a unique exam code (e.g., JBT101)"
-              value={examData.code}
-              onChange={handleExamChange}
-              required
-            />
-          </div>
-          <div className="grid grid-cols-2 gap-6">
+        <div className="grid grid-cols-2 gap-6">
           <div>
             <label className="block text-lg font-medium text-gray-700">
               Subject

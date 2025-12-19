@@ -147,7 +147,6 @@ const ExamList = () => {
                   <h3 className="text-xl font-bold text-white mb-1">
                     {exam.title}
                   </h3>
-                  <p className="text-blue-100 text-sm font-medium">Code: {exam.code}</p>
                 </div>
 
                 {/* Card Body */}

@@ -120,7 +120,6 @@ const AdminExamList = () => {
                                     {/* Card Header with Gradient */}
                                     <div className="bg-gradient-to-r from-blue-600 to-blue-700 text-white p-4">
                                         <h3 className="text-xl font-bold mb-1">{exam.title}</h3>
-                                        <p className="text-blue-100 text-sm">Code: {exam.code}</p>
                                     </div>
 
                                     {/* Card Body */}

@@ -99,7 +99,6 @@ const StartExam = () => {
         <div className="mb-4 flex justify-between items-center">
           <div>
             <h2 className="text-2xl font-bold text-gray-800">{exam.title}</h2>
-            <p className="text-gray-600">Exam Code: {exam.code}</p>
           </div>
           <div className="text-right">
             <p className="text-sm text-red-600 font-semibold">Time Left: {formatTime(timeLeft)}</p>

@@ -5,7 +5,6 @@ const CreateExam = () => {
   const { createExam, addQuestions } = useExam();
   const [examData, setExamData] = useState({
     title: "",
-    code: "",
     subject: "",
     category: "",
     timeLimit: "",
@@ -104,35 +103,19 @@ const CreateExam = () => {
       {/* Form Section */}
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Exam Details */}
-        <div className="grid grid-cols-2 gap-6">
-          <div>
-            <label className="block text-lg font-semibold text-gray-800 mb-2">
-              Exam Title
-            </label>
-            <input
-              className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
-              type="text"
-              name="title"
-              placeholder="e.g., JavaScript Advanced Test"
-              value={examData.title}
-              onChange={handleChange}
-              required
-            />
-          </div>
-          <div>
-            <label className="block text-lg font-semibold text-gray-800 mb-2">
-              Exam Code
-            </label>
-            <input
-              className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
-              type="text"
-              name="code"
-              placeholder="e.g., JBT101"
-              value={examData.code}
-              onChange={handleChange}
-              required
-            />
-          </div>
+        <div>
+          <label className="block text-lg font-semibold text-gray-800 mb-2">
+            Exam Title
+          </label>
+          <input
+            className="input-field px-4 py-3 outline w-full rounded-lg border-2 border-gray-300 focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all"
+            type="text"
+            name="title"
+            placeholder="e.g., JavaScript Advanced Test"
+            value={examData.title}
+            onChange={handleChange}
+            required
+          />
         </div>
 
         <div className="grid grid-cols-2 gap-6">

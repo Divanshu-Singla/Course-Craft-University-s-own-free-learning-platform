@@ -424,7 +424,7 @@ exports.submitResult = async (req, res) => {
 exports.getSubmittedResults = async (req, res) => {
   try {
     const results = await Result.find({ user: req.user.id })
-      .populate("exam", "title code subject totalMarks type") // ✅ Populate `examType`
+      .populate("exam", "title subject totalMarks type") // ✅ Populate `examType`
       .sort({ createdAt: -1 });
 
     if (!results || results.length === 0) {
@@ -462,7 +462,7 @@ exports.getCreatedExams = async (req, res) => {
     // ✅ Include `examType` in the response
     const createdExams = await Exam.find({ createdBy: userId })
       .populate("questions", "text options correctAnswer") 
-      .select("title code subject totalMarks examType") // ✅ Select `examType`
+      .select("title subject totalMarks examType") // ✅ Select `examType`
       .sort({ createdAt: -1 });
 
     res.json(createdExams);
