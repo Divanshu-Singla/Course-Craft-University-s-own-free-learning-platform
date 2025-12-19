@@ -28,53 +28,52 @@
 
 ### Key Highlights
 
-- 🎓 **Multi-role Support**: Learner, Trainer, Admin, and Examinee roles
+- 🎓 **Multi-role Support**: Learner, Trainer, and Admin roles (Examinee role removed)
 - 📚 **Course Management**: Create, manage, and enroll in courses with multimedia content
 - 📖 **Dedicated Lesson Viewer**: Separate page for viewing lessons with progress tracking
-- 📝 **Examination System**: Practice tests and certification exams with automatic grading
-- 📰 **News Integration**: Live news feed with NewsAPI (Technology, Business, Science, Health)
-- 📧 **Email Notifications**: Automated contact form notifications with Gmail SMTP
+- 📝 **Examination System**: Create and take exams with automatic grading and results
+- 📧 **Email Notifications**: Automated notifications via Nodemailer
 - 🔐 **Secure Authentication**: JWT-based authentication with role-based access control
-- ☁️ **Cloud Storage**: Cloudinary integration for media files and videos
+- ☁️ **Cloud Storage**: Cloudinary integration for images and videos
 - 📱 **Responsive Design**: Modern UI with Tailwind CSS and Framer Motion animations
-- 🌑 **Consistent Theme**: Dark navbar and footer (gray-900) with professional look
+- 🔔 **Notification System**: User notifications with delete functionality
+- 🎨 **Professional Forms**: Styled create/edit forms for courses and exams with consistent design
 
 ---
 
 ## ✨ Features
 
 ### For Learners
-- Browse and search available courses by category
-- Enroll in free and paid courses
+- Browse and search available courses with search functionality
+- Enroll in courses and track enrollment
 - Access course lessons with video/image content (dedicated lesson viewer page)
 - Track course progress with visual progress bars
-- Take practice tests and certification exams
-- View exam results and download certificates
-- Track enrolled courses and exam history
-- Update profile and privacy settings
-- Stay updated with latest news in Technology, Business, Science, and Health
+- Continue learning from where you left off
+- Take exams and view results immediately
+- Track enrolled courses and exam history in profile
+- Update profile details and change password
+- Receive and manage notifications
+- View detailed exam results
 
 ### For Trainers
 - Create and manage courses with multimedia lessons
-- Upload course thumbnails, videos, and images
-- Define course syllabus and prerequisites
+- Upload course thumbnails, lesson videos, and images
+- Define course syllabus with modules and prerequisites
 - Create exams with multiple-choice questions
-- Set exam time limits, marks, and difficulty levels
-- View created courses and exams
-- Track course enrollment statistics
+- Set exam time limits, total marks, and difficulty levels (Beginner, Moderate, Advanced)
+- Edit existing courses and exams with professional styled forms
+- View and manage created courses with detailed trainer dashboard
+- View and manage created exams
+- Delete courses and exams
+- Access notifications for course updates
 
 ### For Admins
-- Dashboard with system statistics (users, courses, exams)
-- Approve or reject pending courses
-- Manage users (view, ban, unban)
-- View and manage all courses and exams
-- Access payment and enrollment reports
-- Content moderation and quality control
-
-### For Examinees
-- Access to examination features
-- View exam results and performance analytics
-- Optional course enrollment (upgradeable)
+- Dashboard with system statistics (non-admin users count, courses, exams)
+- Manage users - view all users with their details
+- Ban and unban users functionality
+- View all courses in the system
+- View all exams in the system
+- Access to comprehensive admin panel with sidebar navigation
 
 ---
 
@@ -85,25 +84,24 @@
 - **Framework**: Express.js
 - **Database**: MongoDB with Mongoose ODM
 - **Authentication**: JWT (JSON Web Tokens)
-- **File Upload**: Multer
-- **Cloud Storage**: Cloudinary
-- **PDF Generation**: PDFKit
-- **Email Service**: Nodemailer (Gmail SMTP configured)
-- **External APIs**: NewsAPI for live news feed
+- **File Upload**: Multer for handling multipart/form-data
+- **Cloud Storage**: Cloudinary for images and videos
+- **Email Service**: Nodemailer for contact form and notifications
 - **Security**: bcryptjs for password hashing
+- **Middleware**: Custom auth middleware with role-based access control
+- **Error Handling**: Custom error middleware
 
 ### Frontend
 - **Framework**: React v18.3.1
 - **Build Tool**: Vite v6.0.5
 - **Routing**: React Router DOM v7.3.0
 - **Styling**: Tailwind CSS v4.0.8
-- **UI Components**: Headless UI, Lucide React, React Icons
+- **UI Components**: React Icons (FiUsers, FiBook, FiClipboard)
 - **Animations**: Framer Motion v12.4.7
-- **State Management**: Context API
+- **State Management**: Context API (AuthContext, CourseContext, ExamContext, UserContext, AdminContext)
 - **HTTP Client**: Axios v1.8.1
-- **Notifications**: React Toastify, React Hot Toast
+- **Notifications**: React Toastify
 - **Cookies**: js-cookie
-- **External APIs**: NewsAPI for news integration
 
 ---
 
@@ -202,12 +200,12 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
-# Email Configuration (Gmail SMTP)
-EMAIL_USER=divanshusingla2005@gmail.com
+# Email Configuration (Nodemailer)
+EMAIL_USER=your_email@gmail.com
 EMAIL_APP_PASSWORD=your_gmail_app_password
 
-# NewsAPI Configuration (for news feed)
-NEWS_API_KEY=your_newsapi_key_from_newsapi.org
+# Stripe Configuration (Optional - for payments)
+STRIPE_SECRET_KEY=your_stripe_secret_key
 ```
 
 ### Frontend (vite.config.js)
@@ -305,34 +303,32 @@ export default defineConfig({
 
 ### Learner
 - ✅ Browse and search courses
-- ✅ Enroll in courses (free/paid)
-- ✅ Access course content
+- ✅ Enroll in courses
+- ✅ Access course content and lessons
+- ✅ Track progress with visual progress bars
 - ✅ Take exams
-- ✅ View results and certificates
+- ✅ View exam results
+- ✅ Receive and manage notifications
+- ✅ Update profile and change password
 - ❌ Cannot create courses or exams
 
 ### Trainer
 - ✅ All learner permissions
-- ✅ Create and manage courses
-- ✅ Upload course content (videos, images)
-- ✅ Create and manage exams
-- ✅ View course enrollment statistics
-- ❌ Cannot approve courses (requires admin)
+- ✅ Create and manage courses with multimedia
+- ✅ Upload course thumbnails, videos, and images
+- ✅ Create and manage exams with questions
+- ✅ Edit courses and exams with professional forms
+- ✅ Delete own courses and exams
+- ✅ View created courses and exams in dashboard
+- ✅ Receive notifications for course updates
 
 ### Admin
 - ✅ Full system access
-- ✅ Approve/reject courses
-- ✅ Manage all users
-- ✅ Ban/unban users
-- ✅ View all courses and exams
-- ✅ Access dashboard analytics
-- ✅ Content moderation
-
-### Examinee
-- ✅ Take exams
-- ✅ View exam results
-- ✅ Download certificates
-- ⚠️ Limited course enrollment (upgradeable)
+- ✅ View dashboard with system statistics (users excluding admins, courses, exams)
+- ✅ Manage all users (view, ban, unban)
+- ✅ View all courses in the system
+- ✅ View all exams in the system
+- ✅ Access comprehensive admin panel
 
 ---
 
@@ -345,7 +341,7 @@ export default defineConfig({
   username: String (unique),
   email: String (unique),
   password: String (hashed),
-  role: Enum ['learner', 'trainer', 'examinee', 'admin'],
+  role: Enum ['learner', 'trainer', 'admin'],
   profilePicture: String,
   phoneNumber: String,
   gender: Enum ['Male', 'Female', 'Other'],
@@ -357,14 +353,20 @@ export default defineConfig({
     country: String,
     pincode: String
   },
-  // Role-specific fields
   qualification: String,
   degree: String,
   profession: String,
+  bio: String,
+  githubUrl: String,
+  linkedinUrl: String,
   enrolledCourses: [ObjectId],
-  enrolledExams: [ObjectId],
+  notifications: [{
+    message: String,
+    createdAt: Date
+  }],
   isBanned: Boolean,
-  isDeleted: Boolean
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -400,19 +402,18 @@ export default defineConfig({
 ```javascript
 {
   title: String,
-  code: String,
   subject: String,
   category: String,
-  timeLimit: Number,
+  timeLimit: Number (in minutes),
   numQuestions: Number,
   totalMarks: Number,
-  type: Enum ['Practice Test', 'Certification Exam'],
+  type: Enum ['Beginner', 'Moderate', 'Advanced'],
   questions: [ObjectId],
-  createdBy: ObjectId,
-  randomized: Boolean,
-  expiryDate: Date,
-  attemptsLimit: Number,
-  restrictCopyPaste: Boolean
+  createdBy: ObjectId (Trainer),
+  date: Date,
+  duration: Number,
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -421,12 +422,10 @@ export default defineConfig({
 {
   exam: ObjectId,
   text: String,
-  options: [String],
-  correctAnswer: String,
-  marks: Number,
-  negativeMarking: Number,
-  difficulty: Enum ['Easy', 'Medium', 'Hard'],
-  explanation: String
+  options: [String] (4 options),
+  correctOption: Number (index 0-3),
+  createdAt: Date,
+  updatedAt: Date
 }
 ```
 
@@ -435,15 +434,17 @@ export default defineConfig({
 {
   user: ObjectId,
   exam: ObjectId,
-  examType: String,
-  obtainedMarks: Number,
-  correctAnswers: Number,
-  incorrectAnswers: Number,
-  totalQuestions: Number,
+  score: Number,
+  totalMarks: Number,
   percentage: Number,
   passed: Boolean,
-  certificateUrl: String,
-  submittedAt: Date
+  answers: [{
+    question: ObjectId,
+    selectedOption: Number,
+    isCorrect: Boolean
+  }],
+  submittedAt: Date,
+  createdAt: Date
 }
 ```
 
@@ -556,9 +557,7 @@ LMS/
 │   │   │   ├── EditExam.jsx
 │   │   │   ├── ExamList.jsx
 │   │   │   ├── Home.jsx
-│   │   │   ├── LessonViewer.jsx    # Dedicated lesson viewing page
 │   │   │   ├── Login.jsx
-│   │   │   ├── NewsPage.jsx        # News feed with NewsAPI
 │   │   │   ├── NotFound.jsx
 │   │   │   ├── Profile.jsx
 │   │   │   ├── Register.jsx
@@ -656,9 +655,9 @@ npm run build
 
 ## 🐛 Known Issues & Limitations
 
-1. **NewsAPI Rate Limits**: Free tier limited to 100 requests/day (consider upgrading for production)
-2. **Certificate Generation**: Planned feature for future release
-3. **Mobile Responsiveness**: Some admin pages may need UI improvements for mobile devices
+1. **Certificate Generation**: Not yet implemented
+2. **Mobile Responsiveness**: All pages are responsive but some forms may benefit from further optimization
+3. **File Upload Size**: Limited by Cloudinary free tier constraints
 
 ---
 
@@ -667,7 +666,7 @@ npm run build
 - [ ] Certificate generation for course completion
 - [ ] Dark mode toggle for entire application
 - [ ] Real-time notifications using WebSockets
-- [ ] Advanced analytics dashboard
+- [ ] Advanced analytics dashboard for trainers
 - [ ] Course rating and review system
 - [ ] Discussion forums for courses
 - [ ] Live video streaming for classes
@@ -675,7 +674,8 @@ npm run build
 - [ ] Multi-language support
 - [ ] AI-powered course recommendations
 - [ ] Gamification features (badges, leaderboards)
-- [ ] Integration with third-party LMS tools
+- [ ] Payment gateway integration (Stripe)
+- [ ] Export reports (PDF, Excel)
 
 ---
 
@@ -700,26 +700,26 @@ Contributions are welcome! Please follow these steps:
 
 ## 📄 License
 
-This project is licensed under the MIT License.
+This project is part of a learning platform initiative.
 
 ---
 
 ## 👨‍💻 Author
 
-**CourseCraft Development Team**
+**Divanshu Singla**
 
-For questions or support, please contact:
-- Email: support@coursecraft.com
-- GitHub Issues: [Create an issue](https://github.com/yourusername/coursecraft/issues)
+GitHub: [Divanshu-Singla](https://github.com/Divanshu-Singla)
 
 ---
 
 ## 🙏 Acknowledgments
 
-- MongoDB for database
-- Cloudinary for media storage
+- MongoDB for robust database solution
+- Cloudinary for seamless media storage
 - React and Node.js communities
-- All contributors and testers
+- Express.js for backend framework
+- Tailwind CSS for utility-first styling
+- Framer Motion for smooth animations
 
 ---
 
@@ -727,7 +727,7 @@ For questions or support, please contact:
 
 **Current Version**: 1.0.0  
 **Status**: ✅ Active Development  
-**Last Updated**: November 2025
+**Last Updated**: December 2025
 
 ---
 
