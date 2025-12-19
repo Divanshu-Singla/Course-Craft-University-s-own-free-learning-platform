@@ -63,9 +63,9 @@ const LessonViewer = () => {
   const isLessonCompleted = selectedLesson && courseProgress.completedLessons?.includes(selectedLesson._id);
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 pt-16">
       {/* Header with Course Name and Progress */}
-      <div className="bg-white shadow-md sticky top-0 z-50">
+      <div className="bg-white shadow-md sticky top-16 z-40">
         <div className="max-w-7xl mx-auto px-4 py-3">
           <div className="flex items-center justify-between">
             <button
