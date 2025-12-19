@@ -38,6 +38,8 @@
 - 📱 **Responsive Design**: Modern UI with Tailwind CSS and Framer Motion animations
 - 🔔 **Notification System**: User notifications with delete functionality
 - 🎨 **Professional Forms**: Styled create/edit forms for courses and exams with consistent design
+- 🎓 **Certificate Generation**: Automatic certificate generation upon course completion with downloadable HTML format
+- 📊 **Tabbed Profile**: Organized learner dashboard with tabs for courses, exam results, and certificates
 
 ---
 
@@ -47,10 +49,15 @@
 - Browse and search available courses with search functionality
 - Enroll in courses and track enrollment
 - Access course lessons with video/image content (dedicated lesson viewer page)
-- Track course progress with visual progress bars
+- Track course progress with visual progress bars and percentage display
 - Continue learning from where you left off
 - Take exams and view results immediately
-- Track enrolled courses and exam history in profile
+- **Earn certificates** upon 100% course completion
+- **Download certificates** as HTML files for printing/saving as PDF
+- **Tabbed profile dashboard** with organized sections:
+  - My Enrolled Courses tab
+  - Exam Results tab
+  - My Certificates tab
 - Update profile details and change password
 - Receive and manage notifications
 - View detailed exam results
@@ -129,9 +136,10 @@
 
 ### Data Flow
 1. **User Authentication**: JWT tokens stored in cookies
-2. **Course Creation**: Trainers upload → Pending approval → Admin approves → Public
-3. **Enrollment**: Enrollment record → Access granted
-4. **Exam Flow**: Fetch questions → Submit answers → Auto-grading → Certificate generation
+2. **Course Creation**: Trainers upload → Multer/Cloudinary → Course saved → Published
+3. **Enrollment**: Learner enrolls → Progress tracking begins → Lesson completion tracked
+4. **Exam Flow**: Fetch questions → Submit answers → Auto-grading → Results stored
+5. **Certificate Generation**: 100% course completion → Certificate eligibility checked → HTML certificate generated → Download available
 
 ---
 
@@ -282,6 +290,13 @@ export default defineConfig({
 | GET | `/api/exams/:examId/certificate` | Generate certificate | Yes |
 | PUT | `/api/exams/:examId` | Update exam | Yes (Trainer) |
 | DELETE | `/api/exams/:examId` | Delete exam | Yes (Trainer) |
+
+### Certificate Endpoints
+
+| Method | Endpoint | Description | Auth Required |
+|--------|----------|-------------|---------------|
+| GET | `/api/certificates/check/:courseId` | Check certificate eligibility | Yes |
+| GET | `/api/certificates/generate/:courseId` | Generate and download certificate | Yes |
 
 ### Admin Endpoints
 
@@ -463,9 +478,11 @@ LMS/
 │   ├── controllers/
 │   │   ├── adminController.js  # Admin operations
 │   │   ├── authController.js   # Authentication logic
+│   │   ├── certificateController.js # Certificate generation
 │   │   ├── courseController.js # Course CRUD operations
 │   │   ├── examController.js   # Exam management
 │   │   ├── lessonController.js # Lesson management
+│   │   ├── paymentController.js # Payment processing
 │   │   └── userController.js   # User management
 │   │
 │   ├── middlewares/
@@ -486,13 +503,16 @@ LMS/
 │   ├── routes/
 │   │   ├── adminRoutes.js      # Admin endpoints
 │   │   ├── authRoutes.js       # Auth endpoints
+│   │   ├── certificateRoutes.js # Certificate endpoints
 │   │   ├── contactRoutes.js    # Contact endpoints
 │   │   ├── courseRoutes.js     # Course endpoints
 │   │   ├── examRoutes.js       # Exam endpoints
 │   │   ├── lessonRoutes.js     # Lesson endpoints
+│   │   ├── paymentRoutes.js    # Payment endpoints
 │   │   └── userRoutes.js       # User endpoints
 │   │
 │   ├── utils/
+│   │   ├── certificateTemplate.js # Certificate HTML template
 │   │   ├── emailService.js     # Email utilities
 │   │   ├── generateToken.js    # JWT token generation
 │   │   └── logger.js           # Logging utility
@@ -516,12 +536,14 @@ LMS/
 │   │   ├── components/
 │   │   │   ├── AllCourses.jsx
 │   │   │   ├── Carousel.jsx
+│   │   │   ├── CertificateButton.jsx
 │   │   │   ├── CourseCard.jsx
 │   │   │   ├── CourseCategories.jsx
 │   │   │   ├── EnrolledCourses.jsx
 │   │   │   ├── ExamResults.jsx
 │   │   │   ├── Footer.jsx
 │   │   │   ├── MousePointer.jsx
+│   │   │   ├── MyCertificates.jsx
 │   │   │   ├── Navbar.jsx
 │   │   │   ├── ProtectedRoute.jsx
 │   │   │   ├── ScrollToTopButton.jsx
@@ -647,7 +669,9 @@ npm run build
 - [ ] Lesson access after enrollment
 - [ ] Exam creation and question addition
 - [ ] Exam taking and submission
-- [ ] Certificate generation
+- [ ] Certificate eligibility check (100% completion)
+- [ ] Certificate download functionality
+- [ ] Tabbed profile interface for learners
 - [ ] Admin dashboard statistics
 - [ ] User ban/unban functionality
 
@@ -655,15 +679,17 @@ npm run build
 
 ## 🐛 Known Issues & Limitations
 
-1. **Certificate Generation**: Not yet implemented
-2. **Mobile Responsiveness**: All pages are responsive but some forms may benefit from further optimization
-3. **File Upload Size**: Limited by Cloudinary free tier constraints
+1. **Mobile Responsiveness**: All pages are responsive but some forms may benefit from further optimization
+2. **File Upload Size**: Limited by Cloudinary free tier constraints
+3. **Certificate Format**: Currently generates HTML certificates (can be printed to PDF by users)
 
 ---
 
 ## 🔮 Future Enhancements
 
-- [ ] Certificate generation for course completion
+- [ ] Server-side PDF generation for certificates
+- [ ] Certificate preview before download
+- [ ] Certificate sharing on social media
 - [ ] Dark mode toggle for entire application
 - [ ] Real-time notifications using WebSockets
 - [ ] Advanced analytics dashboard for trainers
