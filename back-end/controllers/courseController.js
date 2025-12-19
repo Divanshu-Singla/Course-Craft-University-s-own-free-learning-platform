@@ -7,7 +7,7 @@ const cloudinary = require("../config/cloudinary");
 const createCourse = async (req, res) => {
     try {
         const { 
-            title, description, category, price, duration, prerequisites, 
+            title, description, category, duration, prerequisites, 
             courseLevel, certificationAvailable, syllabus: syllabusRaw 
         } = req.body;
         
@@ -26,7 +26,7 @@ const createCourse = async (req, res) => {
         const thumbnail = req.files?.thumbnail?.[0]?.path || null;
 
         // ✅ Validate Inputs
-        if (!title || !description || !category || !price || !duration || !courseLevel || !thumbnail) {
+        if (!title || !description || !category || !duration || !courseLevel || !thumbnail) {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
@@ -50,7 +50,6 @@ const createCourse = async (req, res) => {
             category,
             trainer: trainer._id,
             thumbnail,
-            price,
             duration,
             prerequisites,
             courseLevel,

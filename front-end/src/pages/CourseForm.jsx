@@ -11,7 +11,6 @@ const CourseForm = () => {
         title: "",
         description: "",
         category: "",
-        price: "",
         duration: "",
         prerequisites: "",
         courseLevel: "",
@@ -137,8 +136,7 @@ const CourseForm = () => {
                 <input type="text" name="title" placeholder="Title" onChange={handleChange} className="w-full p-2 border rounded" required />
                 <textarea name="description" placeholder="Description" onChange={handleChange} className="w-full p-2 border rounded" required />
                 <input type="text" name="category" placeholder="Category" onChange={handleChange} className="w-full p-2 border rounded" required />
-                <input type="number" name="price" placeholder="Price" onChange={handleChange} className="w-full p-2 border rounded" required />
-                <input type="text" name="duration" placeholder="Duration" onChange={handleChange} className="w-full p-2 border rounded" required />
+                <input type="text" name="duration" placeholder="Duration (in hours)" onChange={handleChange} className="w-full p-2 border rounded" required />
                 <input type="text" name="prerequisites" placeholder="Prerequisites" onChange={handleChange} className="w-full p-2 border rounded" />
                 <select
                     className="w-full p-2 border rounded"

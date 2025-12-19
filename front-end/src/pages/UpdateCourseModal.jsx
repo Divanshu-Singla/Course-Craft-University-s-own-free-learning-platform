@@ -9,7 +9,6 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
         title: course?.title || "",
         description: course?.description || "",
         category: course?.category || "",
-        price: course?.price || 0,
         duration: course?.duration || "",
         level: course?.level || "Beginner",
         prerequisites: course?.prerequisites || "",
@@ -123,7 +122,6 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
         formData.append("title", updatedData.title);
         formData.append("description", updatedData.description);
         formData.append("category", updatedData.category);
-        formData.append("price", updatedData.price);
         formData.append("duration", updatedData.duration);
         formData.append("level", updatedData.level);
         formData.append("prerequisites", updatedData.prerequisites);
@@ -180,12 +178,6 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
                     <div className="mb-3">
                         <label className="block text-sm font-medium">Category</label>
                         <input type="text" name="category" value={updatedData.category} onChange={handleChange} className="w-full p-2 border rounded-md" required />
-                    </div>
-
-                    {/* Price */}
-                    <div className="mb-3">
-                        <label className="block text-sm font-medium">Price ($)</label>
-                        <input type="number" name="price" value={updatedData.price} onChange={handleChange} className="w-full p-2 border rounded-md" required />
                     </div>
 
                     {/* Duration */}

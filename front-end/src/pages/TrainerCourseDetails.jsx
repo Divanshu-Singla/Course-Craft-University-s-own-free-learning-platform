@@ -86,12 +86,6 @@ const CourseDetails = () => {
               <strong>Prerequisites:</strong> {selectedCourse.prerequisites}
             </p>
           )}
-
-          {/* Pricing and Enrollment */}
-          <div className="mt-4">
-            <div className="text-lg font-bold text-white">₹{selectedCourse.price || "449"}</div>
-
-          </div>
         </div>
 
 

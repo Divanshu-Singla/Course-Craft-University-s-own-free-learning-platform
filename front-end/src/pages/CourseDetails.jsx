@@ -119,9 +119,8 @@ const CourseDetails = () => {
             </p>
           )}
 
-          {/* Pricing and Enrollment */}
+          {/* Enrollment */}
           <div className="mt-4">
-            <div className="text-lg font-bold text-white">₹{selectedCourse.price || "449"}</div>
             {isAlreadyEnrolled ? (
               <>
                 <button 

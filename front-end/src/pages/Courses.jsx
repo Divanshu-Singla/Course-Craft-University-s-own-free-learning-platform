@@ -13,7 +13,6 @@ const CoursesList = () => {
     const [currentPage, setCurrentPage] = useState(1);
     const itemsPerPage = 8;
 
-    const [priceFilter, setPriceFilter] = useState("");
     const [typeFilter, setTypeFilter] = useState("");
     const [durationFilter, setDurationFilter] = useState("");
     const [levelFilter, setLevelFilter] = useState("");
@@ -37,27 +36,6 @@ const CoursesList = () => {
                 course.category.toLowerCase().includes(searchQuery.toLowerCase())
             );
         }
-        
-
-        if (priceFilter) {
-            filtered = filtered.filter((course) => {
-                const price = course.price;
-                switch (priceFilter) {
-                    case "<5000": return price < 5000;
-                    case "5000-10000": return price >= 5000 && price <= 10000;
-                    case "10000-15000": return price > 10000 && price <= 15000;
-                    case "15000-20000": return price > 15000 && price <= 20000;
-                    case ">20000": return price > 20000;
-                    default: return true;
-                }
-            });
-        }
-
-        if (typeFilter) {
-            filtered = filtered.filter((course) =>
-                typeFilter === "free" ? course.price === 0 : course.price > 0
-            );
-        }
 
         if (durationFilter) {
             filtered = filtered.filter((course) => {
@@ -78,7 +56,7 @@ const CoursesList = () => {
         setFilteredCourses(filtered);
         setCurrentPage(1);
         window.scrollTo({ top: 0, behavior: "smooth" });
-    }, [courses, searchQuery, priceFilter, typeFilter, durationFilter, levelFilter]);
+    }, [courses, searchQuery, typeFilter, durationFilter, levelFilter]);
 
     const totalPages = Math.ceil(filteredCourses.length / itemsPerPage);
     const currentCourses = filteredCourses.slice(
@@ -133,8 +111,6 @@ const CoursesList = () => {
                 <div className="flex justify-end mb-4">
                     <button
                         onClick={() => {
-                            setPriceFilter("");
-                            setTypeFilter("");
                             setDurationFilter("");
                             setLevelFilter("");
                         }}
@@ -145,36 +121,7 @@ const CoursesList = () => {
                     </button>
                 </div>
 
-                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                    <div>
-                        <label className="block text-gray-700 font-medium mb-1">💰 Price Range</label>
-                        <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={priceFilter}
-                            onChange={(e) => setPriceFilter(e.target.value)}
-                        >
-                            <option value="">All</option>
-                            <option value="<5000">Less than ₹5000</option>
-                            <option value="5000-10000">₹5000 - ₹10000</option>
-                            <option value="10000-15000">₹10000 - ₹15000</option>
-                            <option value="15000-20000">₹15000 - ₹20000</option>
-                            <option value=">20000">More than ₹20000</option>
-                        </select>
-                    </div>
-
-                    <div>
-                        <label className="block text-gray-700 font-medium mb-1">🎟️ Type</label>
-                        <select
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                            value={typeFilter}
-                            onChange={(e) => setTypeFilter(e.target.value)}
-                        >
-                            <option value="">All</option>
-                            <option value="free">Free</option>
-                            <option value="paid">Paid</option>
-                        </select>
-                    </div>
-
+                <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     <div>
                         <label className="block text-gray-700 font-medium mb-1">⏳ Duration</label>
                         <select
