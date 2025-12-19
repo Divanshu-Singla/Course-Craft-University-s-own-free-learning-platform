@@ -30,11 +30,14 @@
 
 - 🎓 **Multi-role Support**: Learner, Trainer, Admin, and Examinee roles
 - 📚 **Course Management**: Create, manage, and enroll in courses with multimedia content
+- 📖 **Dedicated Lesson Viewer**: Separate page for viewing lessons with progress tracking
 - 📝 **Examination System**: Practice tests and certification exams with automatic grading
-- 🏆 **Certificate Generation**: Automated PDF certificate generation for successful exam completions
+- 📰 **News Integration**: Live news feed with NewsAPI (Technology, Business, Science, Health)
+- 📧 **Email Notifications**: Automated contact form notifications with Gmail SMTP
 - 🔐 **Secure Authentication**: JWT-based authentication with role-based access control
 - ☁️ **Cloud Storage**: Cloudinary integration for media files and videos
 - 📱 **Responsive Design**: Modern UI with Tailwind CSS and Framer Motion animations
+- 🌑 **Consistent Theme**: Dark navbar and footer (gray-900) with professional look
 
 ---
 
@@ -43,11 +46,13 @@
 ### For Learners
 - Browse and search available courses by category
 - Enroll in free and paid courses
-- Access course lessons with video/image content
+- Access course lessons with video/image content (dedicated lesson viewer page)
+- Track course progress with visual progress bars
 - Take practice tests and certification exams
 - View exam results and download certificates
 - Track enrolled courses and exam history
 - Update profile and privacy settings
+- Stay updated with latest news in Technology, Business, Science, and Health
 
 ### For Trainers
 - Create and manage courses with multimedia lessons
@@ -83,7 +88,8 @@
 - **File Upload**: Multer
 - **Cloud Storage**: Cloudinary
 - **PDF Generation**: PDFKit
-- **Email Service**: Nodemailer (configured)
+- **Email Service**: Nodemailer (Gmail SMTP configured)
+- **External APIs**: NewsAPI for live news feed
 - **Security**: bcryptjs for password hashing
 
 ### Frontend
@@ -97,6 +103,7 @@
 - **HTTP Client**: Axios v1.8.1
 - **Notifications**: React Toastify, React Hot Toast
 - **Cookies**: js-cookie
+- **External APIs**: NewsAPI for news integration
 
 ---
 
@@ -195,11 +202,12 @@ CLOUDINARY_CLOUD_NAME=your_cloud_name
 CLOUDINARY_API_KEY=your_api_key
 CLOUDINARY_API_SECRET=your_api_secret
 
-# Email Configuration (Optional)
-EMAIL_HOST=smtp.gmail.com
-EMAIL_PORT=587
-EMAIL_USER=your_email@gmail.com
-EMAIL_PASS=your_email_password
+# Email Configuration (Gmail SMTP)
+EMAIL_USER=divanshusingla2005@gmail.com
+EMAIL_APP_PASSWORD=your_gmail_app_password
+
+# NewsAPI Configuration (for news feed)
+NEWS_API_KEY=your_newsapi_key_from_newsapi.org
 ```
 
 ### Frontend (vite.config.js)
@@ -289,7 +297,7 @@ export default defineConfig({
 
 | Method | Endpoint | Description | Auth Required |
 |--------|----------|-------------|---------------|
-| POST | `/api/contact` | Submit contact form | No |
+| POST | `/api/contact` | Submit contact form (sends email to admin & auto-reply to user) | No |
 
 ---
 
@@ -548,7 +556,9 @@ LMS/
 │   │   │   ├── EditExam.jsx
 │   │   │   ├── ExamList.jsx
 │   │   │   ├── Home.jsx
+│   │   │   ├── LessonViewer.jsx    # Dedicated lesson viewing page
 │   │   │   ├── Login.jsx
+│   │   │   ├── NewsPage.jsx        # News feed with NewsAPI
 │   │   │   ├── NotFound.jsx
 │   │   │   ├── Profile.jsx
 │   │   │   ├── Register.jsx
@@ -646,14 +656,16 @@ npm run build
 
 ## 🐛 Known Issues & Limitations
 
-1. **Email Service**: Email configuration is present but needs SMTP credentials
-2. **Certificate Templates**: Custom certificate templates need to be configured
+1. **NewsAPI Rate Limits**: Free tier limited to 100 requests/day (consider upgrading for production)
+2. **Certificate Generation**: Planned feature for future release
 3. **Mobile Responsiveness**: Some admin pages may need UI improvements for mobile devices
 
 ---
 
 ## 🔮 Future Enhancements
 
+- [ ] Certificate generation for course completion
+- [ ] Dark mode toggle for entire application
 - [ ] Real-time notifications using WebSockets
 - [ ] Advanced analytics dashboard
 - [ ] Course rating and review system
