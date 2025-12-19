@@ -1,0 +1,56 @@
+# Environment variables
+.env
+.env.local
+.env.*.local
+*.env
+
+# Dependencies
+node_modules/
+package-lock.json
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Editor and IDE
+.vscode/
+.idea/
+*.sublime-*
+.DS_Store
+Thumbs.db
+Desktop.ini
+
+# OS files
+.DS_Store
+*.swp
+*.swo
+*~
+
+# Build outputs
+dist/
+build/
+.tmp/
+temp/
+
+# Database
+*.sql
+*.sqlite
+*.db
+
+# Uploaded media (Cloudinary handles this)
+back-end/public/images/*
+!back-end/public/images/.gitkeep
+
+# Testing and coverage
+coverage/
+.nyc_output/
+
+# Cache
+.cache/
+.eslintcache
+
+# Temporary files
+*.tmp
