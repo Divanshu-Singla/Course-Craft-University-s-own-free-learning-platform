@@ -14,6 +14,7 @@ import "react-toastify/dist/ReactToastify.css";
 // Lazy Loading Pages
 const Home = lazy(() => import("./pages/Home.jsx"));
 const CourseDetails = lazy(() => import("./pages/CourseDetails.jsx"));
+const LessonViewer = lazy(() => import("./pages/LessonViewer.jsx"));
 const TrainerCourseDetails = lazy(() => import("./pages/TrainerCourseDetails.jsx"));
 const Profile = lazy(() => import("./pages/Profile.jsx"));
 const CourseForm = lazy(() => import("./pages/CourseForm.jsx"));
@@ -66,6 +67,7 @@ function App() {
       <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/CourseDetails/:id" element={<CourseDetails />} />
+          <Route path="/learn/:id" element={<LessonViewer />} />
           <Route path="/TrainerCourseDetails/:id" element={<TrainerCourseDetails />} />
           <Route path="/profile" element={<Profile />} />
           <Route path="/courseForm" element={<CourseForm />} />

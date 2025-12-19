@@ -39,11 +39,6 @@ function Footer() {
                 ✉️ Contact
               </Link>
             </li>
-            <li>
-              <Link to="/faq" className="hover:text-blue-400 transition duration-300">
-                ❓ FAQ
-              </Link>
-            </li>
           </ul>
         </div>
 
