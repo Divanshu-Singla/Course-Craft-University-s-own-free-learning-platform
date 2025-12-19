@@ -123,32 +123,32 @@ const AdminExamList = () => {
                                     </div>
 
                                     {/* Card Body */}
-                                    <div className="p-4 space-y-3">
-                                        <div className="flex items-center text-gray-700">
-                                            <span className="mr-2">📚</span>
-                                            <span className="text-sm"><strong>Subject:</strong> {exam.subject}</span>
+                                    <div className="p-4 space-y-2">
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600 text-sm">Subject:</span>
+                                            <span className="text-gray-900 font-medium text-sm">{exam.subject}</span>
                                         </div>
-                                        <div className="flex items-center text-gray-700">
-                                            <span className="mr-2">🏷️</span>
-                                            <span className="text-sm"><strong>Category:</strong> {exam.category}</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600 text-sm">Category:</span>
+                                            <span className="text-gray-900 font-medium text-sm">{exam.category}</span>
                                         </div>
-                                        <div className="flex items-center text-gray-700">
-                                            <span className="mr-2">⏱️</span>
-                                            <span className="text-sm"><strong>Duration:</strong> {exam.timeLimit} min</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600 text-sm">Duration:</span>
+                                            <span className="text-gray-900 font-medium text-sm">{exam.timeLimit} min</span>
                                         </div>
-                                        <div className="flex items-center text-gray-700">
-                                            <span className="mr-2">❓</span>
-                                            <span className="text-sm"><strong>Questions:</strong> {exam.numQuestions}</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600 text-sm">Questions:</span>
+                                            <span className="text-gray-900 font-medium text-sm">{exam.numQuestions}</span>
                                         </div>
-                                        <div className="flex items-center text-gray-700">
-                                            <span className="mr-2">🎯</span>
-                                            <span className="text-sm"><strong>Total Marks:</strong> {exam.totalMarks}</span>
+                                        <div className="flex justify-between items-center">
+                                            <span className="text-gray-600 text-sm">Total Marks:</span>
+                                            <span className="text-gray-900 font-medium text-sm">{exam.totalMarks}</span>
                                         </div>
                                         
                                         {/* Difficulty Badge */}
                                         <div className="pt-2">
-                                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold border ${difficultyColors[exam.type] || 'bg-gray-100 text-gray-800 border-gray-300'}`}>
-                                                🎓 {exam.type}
+                                            <span className={`inline-block px-3 py-1 rounded-full text-xs font-semibold ${difficultyColors[exam.type] || 'bg-gray-100 text-gray-800 border-gray-300'}`}>
+                                                {exam.type}
                                             </span>
                                         </div>
                                     </div>
@@ -157,13 +157,13 @@ const AdminExamList = () => {
                                     <div className="flex gap-2 p-4 pt-0">
                                         <button
                                             onClick={() => navigate(`/exam/start/${exam._id}`)}
-                                            className="flex-1 px-4 py-2 bg-gradient-to-r from-blue-600 to-blue-700 text-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-medium"
+                                            className="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-medium"
                                         >
-                                            Start Exam →
+                                            Start Exam
                                         </button>
                                         <button
                                             onClick={() => handleDelete(exam._id, exam.title)}
-                                            className="px-4 py-2 bg-red-600 text-white rounded-lg shadow-md hover:bg-red-700 hover:shadow-lg transition-all duration-300 font-medium"
+                                            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
                                         >
                                             Delete
                                         </button>

@@ -151,32 +151,32 @@ const ExamList = () => {
 
                 {/* Card Body */}
                 <div className="p-6">
-                  <div className="space-y-3 mb-5">
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-sm font-medium w-24">📚 Subject:</span>
-                      <span className="text-gray-800 font-semibold">{exam.subject}</span>
+                  <div className="space-y-2 mb-5">
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 text-sm">Subject:</span>
+                      <span className="text-gray-900 font-medium">{exam.subject}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-sm font-medium w-24">🏷️ Category:</span>
-                      <span className="text-gray-800 font-semibold">{exam.category}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 text-sm">Category:</span>
+                      <span className="text-gray-900 font-medium">{exam.category}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-sm font-medium w-24">⏱️ Duration:</span>
-                      <span className="text-gray-800 font-semibold">{exam.timeLimit} min</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 text-sm">Duration:</span>
+                      <span className="text-gray-900 font-medium">{exam.timeLimit} min</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-sm font-medium w-24">❓ Questions:</span>
-                      <span className="text-gray-800 font-semibold">{exam.numQuestions}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 text-sm">Questions:</span>
+                      <span className="text-gray-900 font-medium">{exam.numQuestions}</span>
                     </div>
-                    <div className="flex items-center gap-2">
-                      <span className="text-gray-500 text-sm font-medium w-24">🎯 Marks:</span>
-                      <span className="text-gray-800 font-semibold">{exam.totalMarks}</span>
+                    <div className="flex justify-between items-center">
+                      <span className="text-gray-600 text-sm">Total Marks:</span>
+                      <span className="text-gray-900 font-medium">{exam.totalMarks}</span>
                     </div>
                   </div>
 
                   {/* Difficulty Badge */}
                   <div className="mb-4">
-                    <span className={`inline-block px-4 py-2 text-sm font-bold rounded-lg border-2 ${difficultyColor}`}>
+                    <span className={`inline-block px-3 py-1 text-xs font-semibold rounded-full ${difficultyColor}`}>
                       {exam.type}
                     </span>
                   </div>
@@ -188,9 +188,9 @@ const ExamList = () => {
                     user?.role === "admin") ? (
                     <button
                       onClick={() => navigate(`/exam/start/${exam._id}`)}
-                      className="w-full py-3 bg-gradient-to-r from-blue-600 to-blue-700 text-white font-semibold rounded-lg hover:from-blue-700 hover:to-blue-800 transition-all shadow-md hover:shadow-lg transform hover:scale-105"
+                      className="w-full py-2.5 bg-blue-600 text-white font-medium rounded-lg hover:bg-blue-700 transition-colors"
                     >
-                      Start Exam →
+                      Start Exam
                     </button>
                   ) : (
                     <p className="text-sm text-gray-400 text-center">Not authorized</p>
