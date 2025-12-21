@@ -1,0 +1,58 @@
+services:
+  # Backend API Service
+  - type: web
+    name: lms-backend
+    runtime: node
+    region: oregon
+    plan: free
+    buildCommand: cd back-end && npm install
+    startCommand: cd back-end && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: PORT
+        value: 5000
+      - key: MONGODB_URI
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: EMAIL_HOST
+        sync: false
+      - key: EMAIL_PORT
+        sync: false
+      - key: EMAIL_USER
+        sync: false
+      - key: EMAIL_PASS
+        sync: false
+      - key: CLIENT_URL
+        value: https://your-frontend-url.vercel.app
+    healthCheckPath: /api/auth/health
+
+  # Frontend Static Site (Optional - if you want to host on Render)
+  - type: web
+    name: lms-frontend
+    runtime: static
+    region: oregon
+    plan: free
+    buildCommand: cd front-end && npm install && npm run build
+    staticPublishPath: front-end/dist
+    envVars:
+      - key: VITE_API_URL
+        value: https://lms-backend.onrender.com/api
+    headers:
+      - path: /*
+        name: X-Frame-Options
+        value: DENY
+      - path: /*
+        name: X-Content-Type-Options
+        value: nosniff
+    routes:
+      - type: rewrite
+        source: /*
+        destination: /index.html
