@@ -122,7 +122,7 @@ const CourseDetails = () => {
                     <h3 className="text-xl font-bold">Lessons ({selectedCourse.lessons.length})</h3>
                   </div>
                   <div className="overflow-y-auto max-h-[550px]">
-                    {selectedCourse.lessons.map((lesson, index) => {
+                    {selectedCourse.lessons.filter(lesson => lesson).map((lesson, index) => {
                       const isSelected = selectedLesson?._id === lesson._id;
 
                       return (
