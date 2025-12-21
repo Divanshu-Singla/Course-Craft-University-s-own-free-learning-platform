@@ -298,85 +298,67 @@ const updateCourse = async (req, res) => {
             }
         }
 
-               // ✅ Handle lesson video/image updates
-               if (req.files?.lessonVideos) {
-                const files = req.files.lessonVideos;
-                const lessonUpdates = JSON.parse(req.body.lessonUpdates || "[]");
-    
-                for (let i = 0; i < lessonUpdates.length; i++) {
-                    const lessonUpdate = lessonUpdates[i];
-                    const { _id, title, description } = lessonUpdate;
+        // ✅ Handle lesson updates
+        if (req.files && req.files.length > 0) {
+            // Parse lessons from form data
+            const lessonData = {};
+            
+            // Extract lesson data from req.body (lessons[0][title], lessons[0][description], etc.)
+            Object.keys(req.body).forEach(key => {
+                const match = key.match(/lessons\[(\d+)\]\[(\w+)\]/);
+                if (match) {
+                    const index = match[1];
+                    const field = match[2];
+                    if (!lessonData[index]) lessonData[index] = {};
+                    lessonData[index][field] = req.body[key];
+                }
+            });
+
+            // Process each file (lessonVideos[0], lessonVideos[1], etc.)
+            for (const file of req.files) {
+                const match = file.fieldname.match(/lessonVideos\[(\d+)\]/);
+                if (match) {
+                    const index = match[1];
+                    const lesson = lessonData[index] || {};
                     
                     let newVideoUrl = null;
                     let newImageUrl = null;
-    
-                    // ✅ Upload new video or image if a new file is provided
-                    if (files[i]) {
-                        const file = files[i];
-                        
-                        // Check if it's a video or image
-                        if (file.mimetype.startsWith('video/')) {
-                            const uploadResponse = await cloudinary.uploader.upload(file.path, {
-                                resource_type: "video",
-                                folder: "lesson_videos"
-                            });
-                            newVideoUrl = uploadResponse.secure_url;
-                        } else if (file.mimetype.startsWith('image/')) {
-                            const uploadResponse = await cloudinary.uploader.upload(file.path, {
-                                resource_type: "image",
-                                folder: "lesson_images"
-                            });
-                            newImageUrl = uploadResponse.secure_url;
-                        }
-    
-                        // ✅ Delete old video/image if updating an existing lesson
-                        if (_id) {
-                            const lesson = await Lesson.findById(_id);
-                            if (lesson) {
-                                if (lesson.videoUrl && newVideoUrl) {
-                                    try {
-                                        const oldVideoPublicId = lesson.videoUrl.split("/").pop().split(".")[0];
-                                        await cloudinary.uploader.destroy(`lesson_videos/${oldVideoPublicId}`, { resource_type: "video" });
-                                    } catch (error) {
-                                        console.error("Failed to delete old video:", error);
-                                    }
-                                }
-                                if (lesson.imageUrl && newImageUrl) {
-                                    try {
-                                        const oldImagePublicId = lesson.imageUrl.split("/").pop().split(".")[0];
-                                        await cloudinary.uploader.destroy(`lesson_images/${oldImagePublicId}`, { resource_type: "image" });
-                                    } catch (error) {
-                                        console.error("Failed to delete old image:", error);
-                                    }
-                                }
-                            }
-                        }
+
+                    // Upload new video or image
+                    if (file.mimetype.startsWith('video/')) {
+                        newVideoUrl = file.path; // Already uploaded by Cloudinary storage
+                    } else if (file.mimetype.startsWith('image/')) {
+                        newImageUrl = file.path; // Already uploaded by Cloudinary storage
                     }
-    
-                    if (_id) {
-                        // ✅ Update existing lesson
-                        const updateData = { title, description };
+
+                    if (lesson._id) {
+                        // Update existing lesson
+                        const updateData = {};
+                        if (lesson.title) updateData.title = lesson.title;
+                        if (lesson.description) updateData.description = lesson.description;
                         if (newVideoUrl) updateData.videoUrl = newVideoUrl;
                         if (newImageUrl) updateData.imageUrl = newImageUrl;
                         
-                        await Lesson.findByIdAndUpdate(_id, updateData);
+                        await Lesson.findByIdAndUpdate(lesson._id, updateData);
                     } else {
-                        // ✅ Create new lesson
+                        // Create new lesson
                         const newLesson = new Lesson({
                             course: courseId,
-                            title,
-                            description,
+                            title: lesson.title || 'Untitled Lesson',
+                            description: lesson.description || '',
                             videoUrl: newVideoUrl,
                             imageUrl: newImageUrl
                         });
-    
+
                         await newLesson.save();
                         course.lessons.push(newLesson._id);
                     }
                 }
             }
-        // ✅ Apply partial updates
-        Object.assign(course, updates);
+        }
+        // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
+        const { lessons: _, ...safeUpdates } = updates;
+        Object.assign(course, safeUpdates);
         const updatedCourse = await course.save();
 
         return res.status(200).json({

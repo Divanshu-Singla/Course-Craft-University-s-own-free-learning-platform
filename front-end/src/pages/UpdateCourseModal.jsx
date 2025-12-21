@@ -255,10 +255,10 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
                                     placeholder="Enter lesson description"
                                 />
 
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Upload Lesson Video</label>
+                                <label className="block text-sm font-semibold text-gray-700 mb-1">Upload Lesson Video or Image</label>
                                 <input
                                     type="file"
-                                    accept="video/*"
+                                    accept="video/*,image/*"
                                     onChange={(e) => handleVideoChange(index, e)}
                                     className="w-full px-3 py-2 rounded-lg border border-green-300 focus:ring-2 focus:ring-green-500 focus:outline-none transition"
                                 />
