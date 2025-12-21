@@ -347,6 +347,13 @@ const updateCourse = async (req, res) => {
             for (let i = 0; i < submittedLessons.length; i++) {
                 const lessonData = submittedLessons[i];
                 
+                console.log(`Lesson ${i}:`, {
+                    hasId: !!lessonData._id,
+                    _id: lessonData._id,
+                    title: lessonData.title,
+                    description: lessonData.description
+                });
+                
                 // Skip if this lesson already has an _id (existing lesson)
                 if (lessonData._id) {
                     console.log(`Skipping existing lesson ${lessonData._id}`);
@@ -355,6 +362,8 @@ const updateCourse = async (req, res) => {
                 
                 // CREATE new lesson
                 const uploadedFile = uploadedFiles[i];
+                console.log(`Creating new lesson at index ${i}, has file:`, !!uploadedFile);
+                
                 const newLesson = new Lesson({
                     course: courseId,
                     title: lessonData.title || 'Untitled',
@@ -365,7 +374,7 @@ const updateCourse = async (req, res) => {
                 
                 await newLesson.save();
                 course.lessons.push(newLesson._id);
-                console.log(`Created and appended new lesson ${newLesson._id}`);
+                console.log(`✅ Created and appended new lesson ${newLesson._id}`);
             }
         }
         
