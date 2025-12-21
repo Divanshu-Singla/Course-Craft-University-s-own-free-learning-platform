@@ -5,8 +5,9 @@ services:
     runtime: node
     region: oregon
     plan: free
-    buildCommand: cd back-end && npm install
-    startCommand: cd back-end && npm start
+    rootDir: back-end
+    buildCommand: npm install
+    startCommand: npm start
     envVars:
       - key: NODE_ENV
         value: production
@@ -40,8 +41,9 @@ services:
     runtime: static
     region: oregon
     plan: free
-    buildCommand: cd front-end && npm install && npm run build
-    staticPublishPath: front-end/dist
+    rootDir: front-end
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
     envVars:
       - key: VITE_API_URL
         value: https://lms-backend.onrender.com/api
