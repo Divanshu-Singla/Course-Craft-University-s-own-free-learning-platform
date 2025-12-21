@@ -299,26 +299,30 @@ const updateCourse = async (req, res) => {
         }
 
         // ✅ Handle lesson updates
-        if (req.files && req.files.length > 0) {
-            // Parse lessons from form data
-            const lessonData = {};
-            
-            // Extract lesson data from req.body (lessons[0][title], lessons[0][description], etc.)
-            Object.keys(req.body).forEach(key => {
-                const match = key.match(/lessons\[(\d+)\]\[(\w+)\]/);
-                if (match) {
-                    const index = match[1];
-                    const field = match[2];
-                    if (!lessonData[index]) lessonData[index] = {};
-                    lessonData[index][field] = req.body[key];
-                }
-            });
+        // Parse lessons from form data
+        const lessonData = {};
+        
+        // Extract lesson data from req.body (lessons[0][title], lessons[0][description], etc.)
+        Object.keys(req.body).forEach(key => {
+            const match = key.match(/lessons\[(\d+)\]\[(\w+)\]/);
+            if (match) {
+                const index = match[1];
+                const field = match[2];
+                if (!lessonData[index]) lessonData[index] = {};
+                lessonData[index][field] = req.body[key];
+            }
+        });
 
-            // Process each file (lessonVideos[0], lessonVideos[1], etc.)
+        // Track which lessons got new files
+        const lessonsWithFiles = new Set();
+        
+        // Process file uploads first
+        if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const match = file.fieldname.match(/lessonVideos\[(\d+)\]/);
                 if (match) {
                     const index = match[1];
+                    lessonsWithFiles.add(index);
                     const lesson = lessonData[index] || {};
                     
                     let newVideoUrl = null;
@@ -356,6 +360,25 @@ const updateCourse = async (req, res) => {
                 }
             }
         }
+        
+        // Handle lessons without new files (text-only updates)
+        for (const index in lessonData) {
+            if (!lessonsWithFiles.has(index)) {
+                const lesson = lessonData[index];
+                
+                if (lesson._id) {
+                    // Update existing lesson (only text fields, no media)
+                    const updateData = {};
+                    if (lesson.title) updateData.title = lesson.title;
+                    if (lesson.description) updateData.description = lesson.description;
+                    
+                    if (Object.keys(updateData).length > 0) {
+                        await Lesson.findByIdAndUpdate(lesson._id, updateData);
+                    }
+                }
+            }
+        }
+        
         // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
         const { lessons: _, ...safeUpdates } = updates;
         Object.assign(course, safeUpdates);
