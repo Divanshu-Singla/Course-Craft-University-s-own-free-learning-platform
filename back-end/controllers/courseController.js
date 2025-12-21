@@ -434,20 +434,25 @@ const updateCourse = async (req, res) => {
         // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
         const { lessons: _, ...safeUpdates } = updates;
         Object.assign(course, safeUpdates);
-        const updatedCourse = await course.save();
+        await course.save();
         
         // Populate lessons to return full course data
-        await updatedCourse.populate('lessons');
+        const populatedCourse = await Course.findById(courseId).populate('lessons');
 
         return res.status(200).json({
             message: "Course updated successfully",
-            course: updatedCourse
+            course: populatedCourse
         });
 
     } catch (error) {
         console.error("Error updating course:", error);
         console.error("Error stack:", error.stack);
-        return res.status(500).json({ message: "Failed to update course", error: error.message });
+        console.error("Error name:", error.name);
+        return res.status(500).json({ 
+            message: "Failed to update course", 
+            error: error.message,
+            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
+        });
     }
 };
 
