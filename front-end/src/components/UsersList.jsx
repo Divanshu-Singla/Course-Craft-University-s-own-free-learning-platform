@@ -103,7 +103,7 @@ const AdminDashboard = () => {
                         {currentUsers.map((user) => (
                             <div key={user._id} className="bg-gray-100 p-4 rounded-lg shadow-md flex flex-col items-center">
                                 <img
-                                    src={user.profilePicture || "https://res.cloudinary.com/dzwbq16d6/image/upload/v1732089000/default-avatar_dlkfjp.png"}
+                                    src={user.profilePicture || "https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=200"}
                                     alt={user.fullName}
                                     className="w-24 h-24 rounded-full border-2 border-gray-300 object-cover"
                                 />

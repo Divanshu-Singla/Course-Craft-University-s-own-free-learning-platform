@@ -108,7 +108,7 @@ const Settings = () => {
         <div className="flex flex-col items-center mb-6">
           <div className="mb-4">
             <img
-              src={previewImage || currentUser?.profilePicture || "https://res.cloudinary.com/dzwbq16d6/image/upload/v1732089000/default-avatar_dlkfjp.png"}
+              src={previewImage || currentUser?.profilePicture || "https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=200"}
               alt="Profile Preview"
               className="w-32 h-32 rounded-full border-4 border-blue-400 shadow-lg object-cover"
             />

@@ -78,7 +78,7 @@ const Profile = () => {
         <div className="relative">
           <button onClick={() => setModalOpen(true)} className="focus:outline-none">
             <img
-              src={preview || currentUser.profilePicture || "https://res.cloudinary.com/dzwbq16d6/image/upload/v1732089000/default-avatar_dlkfjp.png"}
+              src={preview || currentUser.profilePicture || "https://ui-avatars.com/api/?name=User&background=3b82f6&color=fff&size=200"}
               alt="Profile"
               className="w-28 h-28 md:w-32 md:h-32 rounded-full border-4 border-blue-400 shadow-xl object-cover"
             />

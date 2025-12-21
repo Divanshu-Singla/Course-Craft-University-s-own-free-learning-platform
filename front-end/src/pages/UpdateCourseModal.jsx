@@ -132,13 +132,18 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
             formData.append("thumbnail", thumbnail);
         }
         updatedData.lessons.forEach((lesson, index) => {
+            if (lesson._id) {
+                formData.append(`lessons[${index}][_id]`, lesson._id);
+            }
             formData.append(`lessons[${index}][title]`, lesson.title);
             formData.append(`lessons[${index}][description]`, lesson.description);
 
             if (lessonVideos[index]) {
                 formData.append(`lessonVideos[${index}]`, lessonVideos[index]); // Append videos correctly
-            } else {
-                formData.append(`lessons[${index}][video]`, lesson.video);
+            } else if (lesson.videoUrl) {
+                formData.append(`lessons[${index}][videoUrl]`, lesson.videoUrl);
+            } else if (lesson.imageUrl) {
+                formData.append(`lessons[${index}][imageUrl]`, lesson.imageUrl);
             }
         });
 

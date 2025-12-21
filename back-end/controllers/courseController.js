@@ -317,7 +317,7 @@ const updateCourse = async (req, res) => {
         // Parse lessons from form data
         const lessonData = {};
         
-        // Extract lesson data from req.body (lessons[0][title], lessons[0][description], etc.)
+        // Extract lesson data from req.body (lessons[0][title], lessons[0][description], lessons[0][_id], etc.)
         Object.keys(req.body).forEach(key => {
             const match = key.match(/lessons\[(\d+)\]\[(\w+)\]/);
             if (match) {
@@ -328,10 +328,13 @@ const updateCourse = async (req, res) => {
             }
         });
 
+        // Track which lesson IDs are being kept
+        const keptLessonIds = new Set();
+        
         // Track which lessons got new files
         const lessonsWithFiles = new Set();
         
-        // Process file uploads first
+        // Process file uploads first (lessons with new media)
         if (req.files && req.files.length > 0) {
             for (const file of req.files) {
                 const match = file.fieldname.match(/lessonVideos\[(\d+)\]/);
@@ -352,11 +355,18 @@ const updateCourse = async (req, res) => {
 
                     if (lesson._id) {
                         // Update existing lesson
+                        keptLessonIds.add(lesson._id);
                         const updateData = {};
                         if (lesson.title) updateData.title = lesson.title;
                         if (lesson.description) updateData.description = lesson.description;
-                        if (newVideoUrl) updateData.videoUrl = newVideoUrl;
-                        if (newImageUrl) updateData.imageUrl = newImageUrl;
+                        if (newVideoUrl) {
+                            updateData.videoUrl = newVideoUrl;
+                            updateData.imageUrl = null; // Clear image if uploading video
+                        }
+                        if (newImageUrl) {
+                            updateData.imageUrl = newImageUrl;
+                            updateData.videoUrl = null; // Clear video if uploading image
+                        }
                         
                         await Lesson.findByIdAndUpdate(lesson._id, updateData);
                     } else {
@@ -371,27 +381,52 @@ const updateCourse = async (req, res) => {
 
                         await newLesson.save();
                         course.lessons.push(newLesson._id);
+                        keptLessonIds.add(newLesson._id.toString());
                     }
                 }
             }
         }
         
-        // Handle lessons without new files (text-only updates)
+        // Handle lessons without new files (text-only updates or existing media preserved)
         for (const index in lessonData) {
             if (!lessonsWithFiles.has(index)) {
                 const lesson = lessonData[index];
                 
                 if (lesson._id) {
-                    // Update existing lesson (only text fields, no media)
+                    // Update existing lesson (text fields, preserve existing media)
+                    keptLessonIds.add(lesson._id);
                     const updateData = {};
                     if (lesson.title) updateData.title = lesson.title;
                     if (lesson.description) updateData.description = lesson.description;
+                    // Preserve existing videoUrl or imageUrl from req.body
+                    if (lesson.videoUrl) updateData.videoUrl = lesson.videoUrl;
+                    if (lesson.imageUrl) updateData.imageUrl = lesson.imageUrl;
                     
                     if (Object.keys(updateData).length > 0) {
                         await Lesson.findByIdAndUpdate(lesson._id, updateData);
                     }
+                } else {
+                    // Create new lesson without media (text only)
+                    const newLesson = new Lesson({
+                        course: courseId,
+                        title: lesson.title || 'Untitled Lesson',
+                        description: lesson.description || ''
+                    });
+
+                    await newLesson.save();
+                    course.lessons.push(newLesson._id);
+                    keptLessonIds.add(newLesson._id.toString());
                 }
             }
+        }
+        
+        // Delete lessons that were removed from the course
+        const existingLessonIds = course.lessons.map(id => id.toString());
+        const lessonsToDelete = existingLessonIds.filter(id => !keptLessonIds.has(id));
+        
+        if (lessonsToDelete.length > 0) {
+            await Lesson.deleteMany({ _id: { $in: lessonsToDelete } });
+            course.lessons = course.lessons.filter(id => !lessonsToDelete.includes(id.toString()));
         }
         
         // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
