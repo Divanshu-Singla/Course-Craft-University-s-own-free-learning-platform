@@ -16,11 +16,9 @@ function NewsPage() {
         setLoading(true);
         setError("");
         try {
-            // Using GNews API - free tier with CORS support (Get your API key from https://gnews.io/)
-            const API_KEY = "7e5689b38b0ecc2d7b8b32e927e019c3"; // Free tier: 100 requests/day
-            const response = await axios.get(
-                `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&max=20&apikey=${API_KEY}`
-            );
+            // Call backend proxy endpoint to avoid CORS issues
+            const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+            const response = await axios.get(`${API_BASE_URL}/news/${category}`);
             setNews(response.data.articles || []);
             setLoading(false);
         } catch (error) {

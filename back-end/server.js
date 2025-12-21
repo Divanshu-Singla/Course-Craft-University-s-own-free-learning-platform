@@ -10,6 +10,7 @@ const connectDB = require("./config/db");
 const contactRoutes = require('./routes/contactRoutes');
 const adminRoutes = require("./routes/adminRoutes");
 const certificateRoutes = require('./routes/certificateRoutes');
+const newsRoutes = require('./routes/newsRoutes');
 
 
 
@@ -73,6 +74,7 @@ app.use('/api/contact', contactRoutes);
 app.use('/api/certificates', certificateRoutes);
 // Add Admin Routes
 app.use("/api/admin", adminRoutes);
+app.use('/api/news', newsRoutes);
 
 // Global Error Handler
 app.use((err, req, res, next) => {
