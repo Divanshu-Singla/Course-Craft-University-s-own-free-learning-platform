@@ -40,6 +40,8 @@ export const ExamProvider = ({ children }) => {
 
   const fetchExams = useCallback(async () => {
     try {
+      setStatus("loading");
+      setError(null);
       const token = getToken();
       if (!token) throw new Error("Unauthorized - No token");
 
@@ -47,12 +49,13 @@ export const ExamProvider = ({ children }) => {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
-      setExams(response.data);
+      setExams(response.data || []);
       setStatus("succeeded");
       return response.data;
     } catch (error) {
-      setError(error.response?.data || "Failed to fetch exams");
+      setError(error.response?.data?.error || error.message || "Failed to fetch exams");
       setStatus("failed");
+      setExams([]);
       throw error;
     }
   }, []);

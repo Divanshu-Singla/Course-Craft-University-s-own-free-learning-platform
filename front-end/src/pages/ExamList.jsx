@@ -16,10 +16,8 @@ const ExamList = () => {
   const examsPerPage = 6;
 
   useEffect(() => {
-    if (status === "idle") {
-      fetchExams();
-    }
-  }, [status, fetchExams]);
+    fetchExams();
+  }, [fetchExams]);
 
   const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
