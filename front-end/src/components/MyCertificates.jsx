@@ -6,6 +6,8 @@ import { motion } from 'framer-motion';
 const MyCertificates = ({ enrolledCourses }) => {
   const [certificates, setCertificates] = useState([]);
   const [loading, setLoading] = useState(true);
+  
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
   useEffect(() => {
     checkAllCertificates();
@@ -23,7 +25,7 @@ const MyCertificates = ({ enrolledCourses }) => {
         enrolledCourses.map(async (course) => {
           try {
             const response = await axios.get(
-              `/api/certificates/check/${course._id}`,
+              `${API_BASE_URL}/certificates/check/${course._id}`,
               {
                 headers: { Authorization: `Bearer ${token}` }
               }
@@ -57,7 +59,7 @@ const MyCertificates = ({ enrolledCourses }) => {
     try {
       const token = Cookies.get('token');
       const response = await axios.get(
-        `/api/certificates/generate/${courseId}`,
+        `${API_BASE_URL}/certificates/generate/${courseId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'text'

@@ -8,6 +8,8 @@ const EnrolledCourses = ({ enrolledCourses }) => {
   const [progressData, setProgressData] = useState({});
   const coursesPerPage = 3;
   const [currentPage, setCurrentPage] = useState(1);
+  
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
   const totalPages = Math.ceil(enrolledCourses.length / coursesPerPage);
   const currentCourses = enrolledCourses.slice(
@@ -22,7 +24,7 @@ const EnrolledCourses = ({ enrolledCourses }) => {
 
       const progressPromises = enrolledCourses.map(async (course) => {
         try {
-          const response = await axios.get(`/api/users/progress/${course._id}`, {
+          const response = await axios.get(`${API_BASE_URL}/users/progress/${course._id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           console.log(`Progress for ${course.title}:`, response.data.progress);
