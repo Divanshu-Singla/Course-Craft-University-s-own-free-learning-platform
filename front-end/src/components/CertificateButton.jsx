@@ -7,6 +7,8 @@ const CertificateButton = ({ courseId, courseName }) => {
   const [eligible, setEligible] = useState(false);
   const [loading, setLoading] = useState(true);
   const [progress, setProgress] = useState(0);
+  
+  const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
 
   useEffect(() => {
     checkEligibility();
@@ -19,7 +21,7 @@ const CertificateButton = ({ courseId, courseName }) => {
       console.log('Token exists:', !!token);
       
       const response = await axios.get(
-        `/api/certificates/check/${courseId}`,
+        `${API_BASE_URL}/certificates/check/${courseId}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -40,7 +42,7 @@ const CertificateButton = ({ courseId, courseName }) => {
     try {
       const token = Cookies.get('token');
       const response = await axios.get(
-        `/api/certificates/generate/${courseId}`,
+        `${API_BASE_URL}/certificates/generate/${courseId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'text'
@@ -71,7 +73,7 @@ const CertificateButton = ({ courseId, courseName }) => {
     return (
       <div className="text-center p-4 bg-gray-100 rounded-lg">
         <p className="text-gray-600">
-          Complete all lessons ({progress.toFixed(0)}% done) to unlock your certificate 🎓
+          Complete all lessons ({(progress || 0).toFixed(0)}% done) to unlock your certificate 🎓
         </p>
       </div>
     );

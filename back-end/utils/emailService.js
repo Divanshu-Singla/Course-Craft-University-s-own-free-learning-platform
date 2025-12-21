@@ -83,7 +83,7 @@ const sendContactAutoReply = async (contactData) => {
           </p>
           
           <div style="text-align: center; margin: 30px 0;">
-            <a href="http://localhost:5173/courses" style="display: inline-block; padding: 12px 30px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Browse Courses</a>
+            <a href="${process.env.CLIENT_URL || 'http://localhost:5173'}/courses" style="display: inline-block; padding: 12px 30px; background-color: #2563eb; color: white; text-decoration: none; border-radius: 6px; font-weight: 600;">Browse Courses</a>
           </div>
           
           <div style="margin-top: 40px; padding-top: 20px; border-top: 1px solid #e5e7eb; text-align: center;">
