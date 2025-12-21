@@ -313,70 +313,8 @@ const updateCourse = async (req, res) => {
             }
         }
 
-        // ✅ Handle NEW lessons only - APPEND ONLY
-        const hasLessonData = Object.keys(req.body).some(key => key.startsWith('lessons['));
-        
-        if (hasLessonData) {
-            console.log('Processing new lessons to append...');
-            
-            // Parse form data into lessons
-            const lessonMap = {};
-            Object.keys(req.body).forEach(key => {
-                const match = key.match(/lessons\[(\d+)\]\[(\w+)\]/);
-                if (match) {
-                    const index = match[1];
-                    const field = match[2];
-                    if (!lessonMap[index]) lessonMap[index] = {};
-                    lessonMap[index][field] = req.body[key];
-                }
-            });
-            
-            const submittedLessons = Object.keys(lessonMap).sort().map(i => lessonMap[i]);
-            console.log(`Found ${submittedLessons.length} lessons in form data`);
-            
-            // Find uploaded files
-            const uploadedFiles = {};
-            if (req.files && Array.isArray(req.files)) {
-                req.files.forEach(file => {
-                    const match = file.fieldname.match(/lessonVideos\[(\d+)\]/);
-                    if (match) uploadedFiles[match[1]] = file;
-                });
-            }
-            
-            // ONLY create NEW lessons (ones without _id)
-            for (let i = 0; i < submittedLessons.length; i++) {
-                const lessonData = submittedLessons[i];
-                
-                console.log(`Lesson ${i}:`, {
-                    hasId: !!lessonData._id,
-                    _id: lessonData._id,
-                    title: lessonData.title,
-                    description: lessonData.description
-                });
-                
-                // Skip if this lesson already has an _id (existing lesson)
-                if (lessonData._id) {
-                    console.log(`Skipping existing lesson ${lessonData._id}`);
-                    continue;
-                }
-                
-                // CREATE new lesson
-                const uploadedFile = uploadedFiles[i];
-                console.log(`Creating new lesson at index ${i}, has file:`, !!uploadedFile);
-                
-                const newLesson = new Lesson({
-                    course: courseId,
-                    title: lessonData.title || 'Untitled',
-                    description: lessonData.description || '',
-                    videoUrl: uploadedFile && uploadedFile.mimetype.startsWith('video/') ? uploadedFile.path : null,
-                    imageUrl: uploadedFile && uploadedFile.mimetype.startsWith('image/') ? uploadedFile.path : null
-                });
-                
-                await newLesson.save();
-                course.lessons.push(newLesson._id);
-                console.log(`✅ Created and appended new lesson ${newLesson._id}`);
-            }
-        }
+        // ✅ Lessons are NOT updated through this endpoint
+        // To manage lessons, use separate lesson endpoints
         
         // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
         const { lessons: _, ...safeUpdates } = updates;

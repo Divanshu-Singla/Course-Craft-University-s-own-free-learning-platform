@@ -3,7 +3,9 @@ import { useParams, useNavigate } from "react-router-dom";
 import { useCourse } from "../contexts/CourseContext";
 import { useAuth } from "../contexts/AuthContext";
 import UpdateCourseModal from "./UpdateCourseModal";
-import { toast } from "react-toastify"
+import { toast } from "react-toastify";
+import axios from "axios";
+import Cookies from "js-cookie";
 
 const CourseDetails = () => {
   const { id } = useParams();
@@ -14,6 +16,11 @@ const CourseDetails = () => {
   const [expandedSyllabusIndex, setExpandedSyllabusIndex] = useState(null);
   const [isUpdateModalOpen, setIsUpdateModalOpen] = useState(false);
   const [selectedLesson, setSelectedLesson] = useState(null);
+  const [isAddLessonModalOpen, setIsAddLessonModalOpen] = useState(false);
+  const [newLesson, setNewLesson] = useState({ title: "", description: "", file: null });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const API_URL = import.meta.env.VITE_API_URL || '/api';
 
   useEffect(() => {
     if (id) fetchCourseById(id);
@@ -47,6 +54,60 @@ const CourseDetails = () => {
       } catch (err) {
         toast.error("Failed to delete course");
       }
+    }
+  };
+
+  const handleDeleteLesson = async (lessonId, lessonTitle) => {
+    const confirmDelete = window.confirm(`Are you sure you want to delete "${lessonTitle}"?`);
+    if (!confirmDelete) return;
+
+    try {
+      const token = Cookies.get("token");
+      await axios.delete(`${API_URL}/lessons/delete/${lessonId}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      
+      toast.success("Lesson deleted successfully!");
+      fetchCourseById(id); // Refresh course data
+      setSelectedLesson(null); // Clear selected lesson
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to delete lesson");
+    }
+  };
+
+  const handleAddLesson = async (e) => {
+    e.preventDefault();
+    
+    if (!newLesson.title || !newLesson.description) {
+      toast.warning("Title and description are required");
+      return;
+    }
+
+    setIsSubmitting(true);
+    const formData = new FormData();
+    formData.append("title", newLesson.title);
+    formData.append("description", newLesson.description);
+    if (newLesson.file) {
+      formData.append("video", newLesson.file);
+    }
+
+    try {
+      const token = Cookies.get("token");
+      await axios.post(`${API_URL}/lessons/create/${id}`, formData, {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          "Content-Type": "multipart/form-data"
+        }
+      });
+      
+      toast.success("Lesson added successfully!");
+      setIsAddLessonModalOpen(false);
+      setNewLesson({ title: "", description: "", file: null });
+      fetchCourseById(id); // Refresh course data
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to add lesson");
+    } finally {
+      setIsSubmitting(false);
     }
   };
   return (
@@ -103,12 +164,21 @@ const CourseDetails = () => {
 
       {/* Show Lessons Button */}
       <div className="mt-8 mx-6">
-        <button
-          onClick={handleToggleLessons}
-          className="bg-blue-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg"
-        >
-          {showLessons ? "Hide Lessons" : "Show Lessons"}
-        </button>
+        <div className="flex gap-4 mb-4">
+          <button
+            onClick={handleToggleLessons}
+            className="bg-blue-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-blue-700 transition-all duration-300 shadow-lg"
+          >
+            {showLessons ? "Hide Lessons" : "Show Lessons"}
+          </button>
+          
+          <button
+            onClick={() => setIsAddLessonModalOpen(true)}
+            className="bg-green-600 text-white font-bold px-6 py-3 rounded-lg hover:bg-green-700 transition-all duration-300 shadow-lg flex items-center gap-2"
+          >
+            <span className="text-xl">+</span> Add New Lesson
+          </button>
+        </div>
 
         {showLessons && (
           <div className="mt-8 text-black">
@@ -148,6 +218,31 @@ const CourseDetails = () => {
                                 {lesson.title}
                               </h4>
                               <div className="flex items-center gap-2 mt-1">
+                                {lesson.videoUrl && (
+                                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
+                                    📹 Video
+                                  </span>
+                                )}
+                                {lesson.imageUrl && (
+                                  <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
+                                    🖼️ Image
+                                  </span>
+                                )}
+                              </div>
+                            </div>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteLesson(lesson._id, lesson.title);
+                              }}
+                              className="flex-shrink-0 text-red-600 hover:text-red-800 hover:bg-red-50 p-2 rounded transition-all"
+                              title="Delete lesson"
+                            >
+                              🗑️
+                            </button>
+                          </div>
+                        </div>
+                      );
                                 {lesson.videoUrl && (
                                   <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
                                     📹 Video
@@ -284,6 +379,87 @@ const CourseDetails = () => {
         </button>
       </div>
       <UpdateCourseModal course={selectedCourse} isOpen={isUpdateModalOpen} onClose={() => setIsUpdateModalOpen(false)} />
+
+      {/* Add Lesson Modal */}
+      {isAddLessonModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm">
+          <div className="bg-white rounded-xl p-6 w-full max-w-2xl mx-4 shadow-2xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Add New Lesson</h2>
+              <button
+                onClick={() => setIsAddLessonModalOpen(false)}
+                className="text-gray-500 hover:text-gray-700 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <form onSubmit={handleAddLesson} className="space-y-4">
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Lesson Title *
+                </label>
+                <input
+                  type="text"
+                  value={newLesson.title}
+                  onChange={(e) => setNewLesson({ ...newLesson, title: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900"
+                  placeholder="Enter lesson title"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Lesson Description *
+                </label>
+                <textarea
+                  value={newLesson.description}
+                  onChange={(e) => setNewLesson({ ...newLesson, description: e.target.value })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 text-gray-900 resize-none"
+                  rows="4"
+                  placeholder="Enter lesson description"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block text-sm font-semibold text-gray-700 mb-2">
+                  Lesson Video or Image (Optional)
+                </label>
+                <input
+                  type="file"
+                  accept="video/*,image/*"
+                  onChange={(e) => setNewLesson({ ...newLesson, file: e.target.files[0] })}
+                  className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 text-gray-900 file:mr-4 file:py-2 file:px-4 file:rounded file:border-0 file:bg-green-50 file:text-green-700 hover:file:bg-green-100"
+                />
+                {newLesson.file && (
+                  <p className="text-sm text-gray-600 mt-2">
+                    Selected: {newLesson.file.name}
+                  </p>
+                )}
+              </div>
+
+              <div className="flex gap-3 pt-4">
+                <button
+                  type="button"
+                  onClick={() => setIsAddLessonModalOpen(false)}
+                  className="flex-1 px-6 py-3 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 transition"
+                >
+                  Cancel
+                </button>
+                <button
+                  type="submit"
+                  disabled={isSubmitting}
+                  className="flex-1 px-6 py-3 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition disabled:bg-gray-400 disabled:cursor-not-allowed"
+                >
+                  {isSubmitting ? "Adding..." : "Add Lesson"}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
     </div>
   );
 };

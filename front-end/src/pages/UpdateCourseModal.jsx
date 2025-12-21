@@ -14,14 +14,10 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
         prerequisites: course?.prerequisites || "",
         certificationAvailable: course?.certificationAvailable || false,
         syllabus: course?.syllabus || [],
-        lessons: course?.lessons || [],
     });
 
     const [thumbnail, setThumbnail] = useState(null);
     const [thumbnailPreview, setThumbnailPreview] = useState(course?.thumbnail || "");
-
-    const [lessonVideos, setLessonVideos] = useState({});
-    const [lessonVideoPreviews, setLessonVideoPreviews] = useState({});
 
     // Handle text inputs
     const handleChange = (e) => {
@@ -38,14 +34,6 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
         if (file) {
             setThumbnail(file);
             setThumbnailPreview(URL.createObjectURL(file));
-        }
-    };
-
-    // Handle Lesson Video Upload
-    const handleVideoChange = (index, e) => {
-        const file = e.target.files[0];
-        if (file) {
-            setLessonVideos((prev) => ({ ...prev, [index]: file }));
         }
     };
 
@@ -77,43 +65,6 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
         }));
     };
 
-    // Handle lesson updates
-    // Handle Lesson Updates
-    const handleLessonChange = (index, field, value) => {
-        const updatedLessons = [...updatedData.lessons];
-        updatedLessons[index] = { ...updatedLessons[index], [field]: value };
-        setUpdatedData((prevData) => ({ ...prevData, lessons: updatedLessons }));
-    };
-
-    // Add a New Lesson
-    const addLesson = () => {
-        setUpdatedData((prevData) => ({
-            ...prevData,
-            lessons: [...prevData.lessons, { title: "", description: "", video: "" }],
-        }));
-    };
-
-    // Remove lesson
-    const removeLesson = (index) => {
-        setUpdatedData((prevData) => ({
-            ...prevData,
-            lessons: prevData.lessons.filter((_, i) => i !== index),
-        }));
-
-        setLessonVideos((prev) => {
-            const newVideos = { ...prev };
-            delete newVideos[index];
-            return newVideos;
-        });
-
-        setLessonVideoPreviews((prev) => {
-            const newPreviews = { ...prev };
-            delete newPreviews[index];
-            return newPreviews;
-        });
-    };
-
-
     // Handle form submission
     const handleSubmit = async (e) => {
         e.preventDefault();
@@ -131,22 +82,6 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
         if (thumbnail) {
             formData.append("thumbnail", thumbnail);
         }
-        updatedData.lessons.forEach((lesson, index) => {
-            if (lesson._id) {
-                formData.append(`lessons[${index}][_id]`, lesson._id);
-            }
-            formData.append(`lessons[${index}][title]`, lesson.title);
-            formData.append(`lessons[${index}][description]`, lesson.description);
-
-            if (lessonVideos[index]) {
-                formData.append(`lessonVideos[${index}]`, lessonVideos[index]); // Append videos correctly
-            } else if (lesson.videoUrl) {
-                formData.append(`lessons[${index}][videoUrl]`, lesson.videoUrl);
-            } else if (lesson.imageUrl) {
-                formData.append(`lessons[${index}][imageUrl]`, lesson.imageUrl);
-            }
-        });
-
 
         // Update the course
         await updateCourse({ courseId: course._id, updatedData: formData });
@@ -225,62 +160,7 @@ const UpdateCourseModal = ({ course, isOpen, onClose }) => {
                         <input type="file" accept="image/*" onChange={handleThumbnailChange} className="w-full px-3 py-2 rounded-lg border border-gray-300 focus:ring-2 focus:ring-blue-500 focus:outline-none transition" />
                         {thumbnailPreview && <img src={thumbnailPreview} alt="Thumbnail Preview" className="mt-3 w-40 h-40 object-cover rounded-lg border-2 border-blue-200" />}
                     </div>
-                    {/* Lessons Section */}
-                    <div className="border-t pt-4">
-                        <h3 className="text-lg font-bold text-gray-800 mb-3">Lessons</h3>
 
-                        {updatedData.lessons.map((lesson, index) => (
-                            <div key={index} className="mb-3 p-4 border border-green-200 rounded-lg bg-green-50">
-                                <div className="flex justify-between items-center mb-2">
-                                    <h4 className="text-sm font-semibold text-green-800">Lesson {index + 1}</h4>
-                                    <button
-                                        type="button"
-                                        onClick={() => removeLesson(index)}
-                                        className="text-red-600 hover:text-red-800 text-sm font-semibold transition"
-                                    >
-                                        Remove
-                                    </button>
-                                </div>
-
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Lesson Title</label>
-                                <input
-                                    type="text"
-                                    value={lesson.title}
-                                    onChange={(e) => handleLessonChange(index, "title", e.target.value)}
-                                    className="w-full px-3 py-2 rounded-lg border border-green-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition mb-2"
-                                    placeholder="Enter lesson title"
-                                />
-
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Lesson Description</label>
-                                <textarea
-                                    value={lesson.description}
-                                    onChange={(e) => handleLessonChange(index, "description", e.target.value)}
-                                    className="w-full px-3 py-2 rounded-lg border border-green-300 focus:ring-2 focus:ring-green-500 focus:border-green-500 focus:outline-none transition mb-2 resize-none"
-                                    rows="3"
-                                    placeholder="Enter lesson description"
-                                />
-
-                                <label className="block text-sm font-semibold text-gray-700 mb-1">Upload Lesson Video or Image</label>
-                                <input
-                                    type="file"
-                                    accept="video/*,image/*"
-                                    onChange={(e) => handleVideoChange(index, e)}
-                                    className="w-full px-3 py-2 rounded-lg border border-green-300 focus:ring-2 focus:ring-green-500 focus:outline-none transition"
-                                />
-                                {lessonVideoPreviews[index] && (
-                                    <video src={lessonVideoPreviews[index]} controls className="mt-3 w-full max-w-md rounded-lg border-2 border-green-300" />
-                                )}
-                            </div>
-                        ))}
-
-                        <button
-                            type="button"
-                            onClick={() => addLesson()}
-                            className="px-4 py-2 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition"
-                        >
-                            Add Lesson
-                        </button>
-                    </div>
                     {/* Syllabus Section */}
                     <div className="border-t pt-4">
                         <h3 className="text-lg font-bold text-gray-800 mb-3">Course Syllabus</h3>
