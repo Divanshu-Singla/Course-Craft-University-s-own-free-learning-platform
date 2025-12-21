@@ -35,8 +35,9 @@ const TrainerExams = () => {
         Created Exams
       </h2>
 
+      {loading && <p className="text-center text-gray-500">Loading exams...</p>}
       {error && <p className="text-center text-red-500">{error}</p>}
-      {exams.length === 0 && (
+      {!loading && exams.length === 0 && (
         <p className="text-center text-gray-500">No exams created yet.</p>
       )}
 

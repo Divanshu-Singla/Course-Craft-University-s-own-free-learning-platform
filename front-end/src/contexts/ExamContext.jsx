@@ -248,6 +248,7 @@ export const ExamProvider = ({ children }) => {
   const fetchCreatedExams = async () => {
     try {
       setLoading(true);
+      setError(null);
       const token = getToken();
       if (!token) throw new Error("Unauthorized - No token");
 
@@ -256,16 +257,13 @@ export const ExamProvider = ({ children }) => {
         withCredentials: true,
       });
 
-      if (!response.data || response.data.length === 0) {
-        throw new Error("No exams found.");
-      }
-
-      setExams(response.data);
+      setExams(response.data || []);
       setLoading(false);
       return response.data;
     } catch (error) {
       setLoading(false);
-      setError(error.response?.data || "Failed to fetch created exams");
+      setError(error.response?.data?.error || error.message || "Failed to fetch created exams");
+      setExams([]);
       throw error;
     }
   };
