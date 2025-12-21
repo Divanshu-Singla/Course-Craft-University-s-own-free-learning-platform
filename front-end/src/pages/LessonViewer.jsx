@@ -12,6 +12,8 @@ const LessonViewer = () => {
   const { token } = useAuth();
   const [selectedLesson, setSelectedLesson] = useState(null);
   const [courseProgress, setCourseProgress] = useState({ completedLessons: [], progressPercentage: 0 });
+  
+  const API_URL = import.meta.env.VITE_API_URL || '/api';
 
   useEffect(() => {
     if (id) {
@@ -35,7 +37,6 @@ const LessonViewer = () => {
   const fetchProgress = async () => {
     try {
       const token = Cookies.get("token");
-      const API_URL = import.meta.env.VITE_API_URL || '/api';
       const response = await axios.get(`${API_URL}/users/progress/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
