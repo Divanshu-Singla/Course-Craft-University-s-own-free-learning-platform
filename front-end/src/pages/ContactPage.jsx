@@ -14,6 +14,7 @@ const itemVariants = {
 };
 
 const ContactPage = () => {
+  const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -29,7 +30,7 @@ const ContactPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const response = await axios.post('/api/contact', formData);
+      const response = await axios.post(`${API_BASE_URL}/contact`, formData);
       console.log(response.data);
 
       // Show success message

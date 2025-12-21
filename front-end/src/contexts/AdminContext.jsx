@@ -4,6 +4,8 @@ import Cookies from 'js-cookie';
 
 const AdminContext = createContext();
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 export const useAdmin = () => {
   const context = useContext(AdminContext);
   if (!context) {
@@ -28,7 +30,7 @@ export const AdminProvider = ({ children }) => {
       const token = Cookies.get('token');
       console.log("Token:", token ? "Present" : "Missing");
       
-      const response = await axios.get("/api/admin/stats", {
+      const response = await axios.get(`${API_BASE_URL}/admin/stats`, {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });
@@ -57,7 +59,7 @@ export const AdminProvider = ({ children }) => {
   const banUser = async (userId) => {
     try {
       const token = Cookies.get('token');
-      await axios.put(`/api/admin/ban/${userId}`, {}, { 
+      await axios.put(`${API_BASE_URL}/admin/ban/${userId}`, {}, { 
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true 
       });
@@ -74,7 +76,7 @@ export const AdminProvider = ({ children }) => {
   const unbanUser = async (userId) => {
     try {
       const token = Cookies.get('token');
-      await axios.put(`/api/admin/unban/${userId}`, {}, { 
+      await axios.put(`${API_BASE_URL}/admin/unban/${userId}`, {}, { 
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true 
       });
