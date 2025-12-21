@@ -6,15 +6,42 @@ const cloudinary = require("../config/cloudinary");
 // ✅ Create Course (Trainers Only, Starts Pending for Admin Approval)
 const createCourse = async (req, res) => {
     try {
+        console.log("📦 Create Course - Request Body:", req.body);
+        console.log("📁 Create Course - Files:", req.files);
+        
         const { 
             title, description, category, duration, prerequisites, 
             courseLevel, certificationAvailable, syllabus: syllabusRaw 
         } = req.body;
         
-        // ✅ Parse lessons strictly from JSON/string (reverted)
-        const lessons = Array.isArray(req.body.lessons)
-            ? req.body.lessons
-            : JSON.parse(req.body.lessons || "[]");
+        // ✅ Parse lessons from FormData format (lessons[0][title], lessons[1][title], etc.)
+        let lessons = [];
+        if (req.body.lessons) {
+            // If lessons is sent as JSON string
+            lessons = Array.isArray(req.body.lessons)
+                ? req.body.lessons
+                : JSON.parse(req.body.lessons || "[]");
+        } else {
+            // Parse from FormData format: lessons[0][title], lessons[0][description], etc.
+            const lessonIndices = new Set();
+            Object.keys(req.body).forEach(key => {
+                const match = key.match(/^lessons\[(\d+)\]/);
+                if (match) lessonIndices.add(parseInt(match[1]));
+            });
+            
+            lessonIndices.forEach(index => {
+                const lesson = {
+                    title: req.body[`lessons[${index}][title]`],
+                    description: req.body[`lessons[${index}][description]`],
+                    order: req.body[`lessons[${index}][order]`] || index + 1
+                };
+                if (lesson.title && lesson.description) {
+                    lessons.push(lesson);
+                }
+            });
+        }
+        
+        console.log("📚 Parsed Lessons:", lessons);
 
         // ✅ Ensure user is a trainer
         const trainer = await User.findById(req.user.id);
@@ -42,16 +69,40 @@ const createCourse = async (req, res) => {
             return res.status(400).json({ success: false, message: "Missing required fields" });
         }
 
-        // ✅ Parse & Validate Syllabus strictly from JSON/string (reverted)
+        // ✅ Parse & Validate Syllabus from FormData format (syllabus[0][title], etc.)
         let syllabus = [];
         try {
-            syllabus = Array.isArray(syllabusRaw) ? syllabusRaw : JSON.parse(syllabusRaw || "[]");
+            if (syllabusRaw) {
+                // If syllabus is sent as JSON string
+                syllabus = Array.isArray(syllabusRaw) ? syllabusRaw : JSON.parse(syllabusRaw || "[]");
+            } else {
+                // Parse from FormData format: syllabus[0][title], syllabus[0][description], etc.
+                const syllabusIndices = new Set();
+                Object.keys(req.body).forEach(key => {
+                    const match = key.match(/^syllabus\[(\d+)\]/);
+                    if (match) syllabusIndices.add(parseInt(match[1]));
+                });
+                
+                syllabusIndices.forEach(index => {
+                    const item = {
+                        title: req.body[`syllabus[${index}][title]`],
+                        description: req.body[`syllabus[${index}][description]`]
+                    };
+                    if (item.title && item.description) {
+                        syllabus.push(item);
+                    }
+                });
+            }
+            
+            console.log("📋 Parsed Syllabus:", syllabus);
+            
             syllabus.forEach(item => {
                 if (!item.title || !item.description) {
                     throw new Error("Each syllabus item must have a title and description.");
                 }
             });
         } catch (err) {
+            console.error("❌ Syllabus Parse Error:", err.message);
             return res.status(400).json({ success: false, message: "Invalid syllabus format: " + err.message });
         }
 
@@ -127,6 +178,7 @@ const createCourse = async (req, res) => {
         });
 
     } catch (error) {
+        console.error("❌ Course Creation Error:", error);
         return res.status(500).json({ success: false, message: error.message });
     }
 };
