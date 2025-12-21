@@ -64,9 +64,6 @@ const upload = multer({
 module.exports = {
   upload,  // ✅ export the raw multer instance
   uploadSingle: upload.single("profilePicture"),
-  uploadCourseFiles: upload.fields([
-    { name: "thumbnail", maxCount: 1 },
-    { name: "lessonVideos", maxCount: 50 },
-  ]),
+  uploadCourseFiles: upload.any(), // ✅ Accept any field names (lessonVideos[0], lessonVideos[1], etc.)
   uploadCSV: upload.single("file"),
 };
