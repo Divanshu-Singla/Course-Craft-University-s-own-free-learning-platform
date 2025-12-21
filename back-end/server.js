@@ -54,6 +54,40 @@ app.options("*", cors()); // Handle preflight requests globally
 
 connectDB();
 
+// ✅ Auto-create admin account on server startup
+const createDefaultAdmin = async () => {
+    try {
+        const User = require('./models/User');
+        const bcrypt = require('bcryptjs');
+        
+        const adminEmail = 'admin@gmail.com';
+        const existingAdmin = await User.findOne({ email: adminEmail });
+        
+        if (!existingAdmin) {
+            const hashedPassword = await bcrypt.hash('admin', 10);
+            const adminUser = new User({
+                fullName: 'System Administrator',
+                username: 'admin',
+                email: adminEmail,
+                password: hashedPassword,
+                role: 'admin',
+                accessLevel: 'Full Admin',
+                isDeleted: false
+            });
+            
+            await adminUser.save();
+            console.log('✅ Default admin account created: admin@gmail.com / admin');
+        } else {
+            console.log('ℹ️  Admin account already exists');
+        }
+    } catch (error) {
+        console.error('❌ Error creating default admin:', error.message);
+    }
+};
+
+// Create admin after DB connection
+setTimeout(createDefaultAdmin, 2000);
+
 // Health Check Endpoint (for Render monitoring)
 app.get("/api/auth/health", (req, res) => {
     res.status(200).json({ status: "OK", message: "Server is running", timestamp: new Date().toISOString() });

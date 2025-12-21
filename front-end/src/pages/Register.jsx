@@ -153,7 +153,6 @@ function Register({ isOpen, onClose, onLoginClick }) {
                     >
                       <option value="learner">Learner</option>
                       <option value="trainer">Trainer</option>
-                      <option value="admin">Admin</option>
                     </select>
                   </div>
 

@@ -19,6 +19,11 @@ const registerUser = async (req, res) => {
             return res.status(400).json({ error: "All required fields must be provided." });
         }
 
+        // ✅ Block admin registration through public endpoint
+        if (role === "admin") {
+            return res.status(403).json({ error: "Admin accounts cannot be created through registration." });
+        }
+
         // Hash Password
         const hashedPassword = await bcrypt.hash(password, 10);
 
