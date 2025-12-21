@@ -2,6 +2,8 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
 
+const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
+
 const Notifications = () => {
   const [notifications, setNotifications] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -13,7 +15,7 @@ const Notifications = () => {
   const fetchNotifications = async () => {
     try {
       const token = Cookies.get("token");
-      const response = await axios.get("/api/users/notifications/all", {
+      const response = await axios.get(`${API_BASE_URL}/users/notifications/all`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotifications(response.data.notifications || []);
@@ -28,7 +30,7 @@ const Notifications = () => {
     try {
       const token = Cookies.get("token");
       await axios.patch(
-        `/api/users/notifications/${notificationId}/read`,
+        `${API_BASE_URL}/users/notifications/${notificationId}/read`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -45,7 +47,7 @@ const Notifications = () => {
     try {
       const token = Cookies.get("token");
       await axios.patch(
-        "/api/users/notifications/mark-all-read",
+        `${API_BASE_URL}/users/notifications/mark-all-read`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -60,7 +62,7 @@ const Notifications = () => {
     try {
       const token = Cookies.get("token");
       await axios.delete(
-        `/api/users/notifications/${notificationId}`,
+        `${API_BASE_URL}/users/notifications/${notificationId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       
