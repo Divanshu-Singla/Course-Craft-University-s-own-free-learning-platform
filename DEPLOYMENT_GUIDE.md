@@ -77,11 +77,11 @@ git push origin main
 4. **Configure Service:**
    - **Name**: `lms-backend`
    - **Region**: Oregon (US West) or closest to you
-   - **Branch**: `main`
-   - **Root Directory**: Leave empty or type `back-end`
+   - **Branch**: `master` (or `main` if that's your branch name)
+   - **Root Directory**: `back-end`
    - **Runtime**: Node
-   - **Build Command**: `cd back-end && npm install`
-   - **Start Command**: `cd back-end && npm start`
+   - **Build Command**: `npm install`
+   - **Start Command**: `npm start`
    - **Plan**: Free
 
 5. **Add Environment Variables:**
