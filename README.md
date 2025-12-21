@@ -1,22 +1,35 @@
-# CourseCraft - Learning Management System
+# 🎓 CourseCraft - Learning Management System
 
 ![CourseCraft](https://img.shields.io/badge/Version-1.0.0-blue)
 ![License](https://img.shields.io/badge/License-MIT-green)
-![Node](https://img.shields.io/badge/Node-v14+-brightgreen)
-![React](https://img.shields.io/badge/React-v18.3.1-61dafb)
+![Node](https://img.shields.io/badge/Node-v18+-brightgreen)
+![React](https://img.shields.io/badge/React-18.3.1-61dafb)
+![MongoDB](https://img.shields.io/badge/MongoDB-8.11.0-green)
+![Express](https://img.shields.io/badge/Express-Latest-lightgrey)
+
+> A comprehensive, full-stack Learning Management System built with the MERN stack, featuring course management, lesson creation, exam system, and certificate generation.
+
+**🌐 Live Demo:**  
+- **Frontend:** [https://course-craft-university-s-own-free-eight.vercel.app](https://course-craft-university-s-own-free-eight.vercel.app)  
+- **Backend:** [https://course-craft-university-s-own-free-iipg.onrender.com](https://course-craft-university-s-own-free-iipg.onrender.com)
+
+---
 
 ## 📋 Table of Contents
 
 - [Overview](#overview)
-- [Features](#features)
+- [Key Features](#key-features)
 - [Tech Stack](#tech-stack)
 - [System Architecture](#system-architecture)
+- [Quick Start](#quick-start)
 - [Installation](#installation)
 - [Environment Variables](#environment-variables)
 - [API Documentation](#api-documentation)
 - [User Roles & Permissions](#user-roles--permissions)
 - [Database Schema](#database-schema)
 - [Project Structure](#project-structure)
+- [Deployment](#deployment)
+- [Study Resources](#study-resources)
 - [Contributing](#contributing)
 - [License](#license)
 
@@ -24,63 +37,58 @@
 
 ## 🌟 Overview
 
-**CourseCraft** is a full-featured Learning Management System (LMS) designed to facilitate online education through course creation, enrollment, and examination. The platform supports multiple user roles and provides a comprehensive ecosystem for trainers to share knowledge and learners to acquire new skills.
+**CourseCraft** is a production-ready, full-featured Learning Management System (LMS) designed for modern online education. Built with the MERN stack (MongoDB, Express, React, Node.js), it provides a comprehensive platform where trainers can create and manage courses, and learners can enroll, learn, and earn certificates.
 
-### Key Highlights
+### 🎯 Project Highlights
 
-- 🎓 **Multi-role Support**: Learner, Trainer, and Admin roles (Examinee role removed)
-- 📚 **Course Management**: Create, manage, and enroll in courses with multimedia content
-- 📖 **Dedicated Lesson Viewer**: Separate page for viewing lessons with progress tracking
-- 📝 **Examination System**: Create and take exams with automatic grading and results
-- 📧 **Email Notifications**: Automated notifications via Nodemailer
-- 🔐 **Secure Authentication**: JWT-based authentication with role-based access control
-- ☁️ **Cloud Storage**: Cloudinary integration for images and videos
-- 📱 **Responsive Design**: Modern UI with Tailwind CSS and Framer Motion animations
-- 🔔 **Notification System**: User notifications with delete functionality
-- 🎨 **Professional Forms**: Styled create/edit forms for courses and exams with consistent design
-- 🎓 **Certificate Generation**: Automatic certificate generation upon course completion with downloadable HTML format
-- 📊 **Tabbed Profile**: Organized learner dashboard with tabs for courses, exam results, and certificates
+- 🎓 **Multi-Role System**: Learner, Trainer, and Admin with secure role-based access control
+- 📚 **Course Management**: Complete CRUD operations with multimedia support
+- 📖 **Lesson Management**: Separate lesson creation and deletion with video/image uploads
+- 📝 **Exam System**: Timed exams with auto-grading and instant results
+- 🎖️ **Certificate Generation**: Automatic certificates upon exam completion
+- 📧 **Email Service**: Dual-method email (Resend API + Gmail SMTP fallback)
+- 🔐 **Secure Authentication**: JWT-based auth with httpOnly cookies
+- ☁️ **Cloud Storage**: Cloudinary CDN for all media files
+- 📱 **Responsive Design**: Modern UI with Framer Motion animations
+- 🔄 **Auto-Deployment**: CI/CD pipeline with GitHub integration
+- 🛡️ **Admin Dashboard**: User management, statistics, and system monitoring
 
 ---
 
-## ✨ Features
+## ✨ Key Features
 
-### For Learners
-- Browse and search available courses with search functionality
-- Enroll in courses and track enrollment
-- Access course lessons with video/image content (dedicated lesson viewer page)
-- Track course progress with visual progress bars and percentage display
-- Continue learning from where you left off
-- Take exams and view results immediately
-- **Earn certificates** upon 100% course completion
-- **Download certificates** as HTML files for printing/saving as PDF
-- **Tabbed profile dashboard** with organized sections:
-  - My Enrolled Courses tab
-  - Exam Results tab
-  - My Certificates tab
-- Update profile details and change password
-- Receive and manage notifications
-- View detailed exam results
+### 👨‍🎓 For Learners
+- ✅ Browse and search courses with advanced filtering
+- ✅ Enroll in courses with one-click enrollment
+- ✅ Access dedicated lesson viewer with video/image content
+- ✅ Track progress with visual progress indicators
+- ✅ Take timed exams with auto-grading
+- ✅ View detailed results and correct answers
+- ✅ Download certificates upon exam completion
+- ✅ Update profile details and change password
+- ✅ Manage enrolled courses and exam history
+- ✅ Responsive design for mobile and desktop
 
-### For Trainers
-- Create and manage courses with multimedia lessons
-- Upload course thumbnails, lesson videos, and images
-- Define course syllabus with modules and prerequisites
-- Create exams with multiple-choice questions
-- Set exam time limits, total marks, and difficulty levels (Beginner, Moderate, Advanced)
-- Edit existing courses and exams with professional styled forms
-- View and manage created courses with detailed trainer dashboard
-- View and manage created exams
-- Delete courses and exams
-- Access notifications for course updates
+### 👨‍🏫 For Trainers
+- ✅ Create courses with rich multimedia content
+- ✅ Upload thumbnails, videos, and images via Cloudinary
+- ✅ **Add/Delete lessons** with dedicated UI on course details page
+- ✅ Define course syllabus, prerequisites, and certification options
+- ✅ Create exams with multiple-choice questions
+- ✅ Set exam duration, passing marks, and difficulty levels
+- ✅ **Edit course details** (lessons managed separately)
+- ✅ View and manage all created courses and exams
+- ✅ Track enrolled students
+- ✅ Professional dashboard for content management
 
-### For Admins
-- Dashboard with system statistics (non-admin users count, courses, exams)
-- Manage users - view all users with their details
-- Ban and unban users functionality
-- View all courses in the system
-- View all exams in the system
-- Access to comprehensive admin panel with sidebar navigation
+### 👨‍💼 For Admins
+- ✅ **Auto-created admin account** (admin@gmail.com / admin) on server startup
+- ✅ Comprehensive dashboard with system statistics
+- ✅ User management (view all users)
+- ✅ View all courses and exams in the system
+- ✅ System monitoring and analytics
+- ✅ Secure admin panel with sidebar navigation
+- ⚠️ **Admin role cannot be registered** publicly (security feature)
 
 ---
 
@@ -91,21 +99,36 @@
 - **Framework**: Express.js
 - **Database**: MongoDB with Mongoose ODM
 - **Authentication**: JWT (JSON Web Tokens)
-- **File Upload**: Multer for handling multipart/form-data
-- **Cloud Storage**: Cloudinary for images and videos
-- **Email Service**: Nodemailer for contact form and notifications
-- **Security**: bcryptjs for password hashing
-- **Middleware**: Custom auth middleware with role-based access control
-- **Error Handling**: Custom error middleware
-
-### Frontend
-- **Framework**: React v18.3.1
-- **Build Tool**: Vite v6.0.5
-- **Routing**: React Router DOM v7.3.0
-- **Styling**: Tailwind CSS v4.0.8
-- **UI Components**: React Icons (FiUsers, FiBook, FiClipboard)
-- **Animations**: Framer Motion v12.4.7
-- **State Management**: Context API (AuthContext, CourseContext, ExamContext, UserContext, AdminContext)
+- **File Upload**: Multer 8+)
+- **Framework**: Express.js (RESTful API architecture)
+- **Database**: MongoDB with Mongoose 8.11.0 (ODM)
+- **Authentication**: JWT (JSON Web Tokens) with httpOnly cookies
+- **File Upload**: Multer with multer-storage-cloudinary
+- **Cloud Storage**: Cloudinary CDN (images, videos, automatic optimization)
+- **Email Service**: 
+  - **Primary**: Resend API (100 emails/day free tier)
+  - **Fallback**: Gmail SMTP via Nodemailer
+  - **Auto-detection**: Switches based on EMAIL_API_KEY presence
+- **Security**: 
+  - bcrypt (password hashing with 10 salt rounds)
+  - CORS configuration 18.3.1 (Component-based architecture)
+- **Build Tool**: Vite 6.0.5 (Lightning-fast HMR and optimized builds)
+- **Routing**: React Router DOM 7.3.0
+- **Styling**: CSS with modern features
+- **Animations**: Framer Motion 12.4.7 (smooth transitions and animations)
+- **State Management**: Context API
+  - AuthContext (user authentication and authorization)
+  - CourseContext (course data and operations)
+  - ExamContext (exam management and submission)
+  - UserContext (user profile and enrollment)
+  - AdminContext (admin operations)
+- **HTTP Client**: Axios 1.8.1 (with interceptors for tokens)
+- **Cookie Management**: js-cookie (for JWT token storage)
+- **UI Features**: 
+  - Custom hooks (useNetworkStatus)
+  - Protected routes with role verification
+  - Responsive design for all devices
+  - Loading states and error handlingContext API (AuthContext, CourseContext, ExamContext, UserContext, AdminContext)
 - **HTTP Client**: Axios v1.8.1
 - **Notifications**: React Toastify
 - **Cookies**: js-cookie
@@ -128,55 +151,123 @@
      │       │
      │       └──────────┐
      │                  │
-┌────▼────┐      ┌──────▼────────┐
-│ MongoDB │      │   Cloudinary  │
-│ Database│      │  Media Storage│
-└─────────┘      └───────────────┘
+┌───� Quick Start
+
+### Prerequisites
+- **Node.js** v18+ and npm
+- **MongoDB** (local or MongoDB Atlas)
+- **Cloudinary** account (free tier)
+- **Resend** account (optional, for email API)
+- **Git** for version control
+
+### One-Command Setup
+
+```bash
+# Clone the repository
+git clone https://github.com/Divanshu-Singla/LMS.git
+cd LMS
+
+# Backend setup
+cd back-end
+npm install
+# Create .env file and configure (see Environment Variables section)
+npm start
+
+# Frontend setup (in a new terminal)
+cd ../front-end
+npm install
+npm run dev
 ```
 
-### Data Flow
-1. **User Authentication**: JWT tokens stored in cookies
-2. **Course Creation**: Trainers upload → Multer/Cloudinary → Course saved → Published
-3. **Enrollment**: Learner enrolls → Progress tracking begins → Lesson completion tracked
-4. **Exam Flow**: Fetch questions → Submit answers → Auto-grading → Results stored
-5. **Certificate Generation**: 100% course completion → Certificate eligibility checked → HTML certificate generated → Download available
+✅ **Backend**: http://localhost:5000  
+✅ **Frontend**: http://localhost:5173
 
 ---
 
 ## 📦 Installation
 
-### Prerequisites
-- Node.js (v14 or higher)
-- MongoDB (local or cloud instance)
-- Cloudinary account
-
-### Backend Setup
+### Step-by-Step Backend Setup
 
 ```bash
-# Navigate to backend directory
 cd back-end
-
-# Install dependencies
 npm install
-
-# Create .env file
-cp .env.example .env
-
-# Configure environment variables (see below)
-# Start the server
-npm start
 ```
 
-The backend server will run on `http://localhost:5000`
-
-### Frontend Setup
-
+**Create `.env` file:**
 ```bash
-# Navigate to frontend directory
-cd front-end
+# Copy the environment template
+touch .env`.env` Configuration
 
-# Install dependencies
-npm install
+```env
+# ============================================
+# SERVER CONFIGURATION
+# ============================================
+PORT=5000
+NODE_ENV=development
+
+# ============================================
+# DATABASE (MongoDB)
+# ============================================
+# Local MongoDB
+MONGO_URI=mongodb://localhost:27017/coursecraft
+
+# OR MongoDB Atlas (Production)
+# MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/coursecraft?retryWrites=true&w=majority
+
+# ============================================
+# AUTHENTICATION
+# ============================================
+JWT_SECRET=your_super_secure_random_jwt_secret_key_min_32_characters
+
+# ============================================
+# CLOUDINARY (File Storage)
+# ============================================
+CLOUDINARY_CLOUD_NAME=your_cloud_name
+CLOUDINARY_API_KEY=your_cloudinary_api_key
+CLOUDINARY_API_SECRET=your_cloudinary_api_secret
+
+# ============================================
+# EMAIL SERVICE (Dual Method Support)
+# ============================================
+# Method 1: Resend API (Primary - Recommended for production)
+EMAIL_API_KEY=re_YourResendAPIKey
+EMAIL_FROM=CourseCraft <onboarding@resend.dev>
+ADMIN_EMAIL=your-admin-email@gmail.com
+
+# Method 2: Gmail SMTP (Fallback - if EMAIL_API_KEY not set)
+EMAIL_USER=your-email@gmail.com
+EMAIL_PASSWORD=your-gmail-app-specific-password
+
+# Email auto-detection:
+# - If EMAIL_API_KEY exists → Uses Resend API
+# - If EMAIL_API_KEY missing → Falls back to Gmail SMTP
+
+# ============================================
+# ADMIN ACCOUNT (Auto-created on startup)
+# ============================================
+# Default credentials: admin@gmail.com / admin
+# Change password after first login!
+```
+
+### Frontend Environment Variables
+
+**Vercel Deployment:**
+Set in Vercel dashboard → Project Settings → Environment Variables:
+
+```env
+VITE_API_URL=https://course-craft-university-s-own-free-iipg.onrender.com
+```
+
+**Local Development:**
+Frontend automatically uses `http://localhost:5000` in development mode.
+
+### 📝 Important Notes
+
+1. **JWT_SECRET**: Must be at least 32 characters for security
+2. **EMAIL_API_KEY**: Get free key from [Resend.com](https://resend.com) (100 emails/day)
+3. **Gmail App Password**: If using SMTP, enable 2FA and generate app-specific password
+4. **Cloudinary**: Sign up at [cloudinary.com](https://cloudinary.com) for free tier (25GB storage)
+5. **Admin Account**: Auto-created as `admin@gmail.com` with password `admin` on first server start install
 
 # Start development server
 npm run dev
@@ -196,10 +287,11 @@ PORT=5000
 NODE_ENV=development
 
 # Database
-MONGO_URI=mongodb://localhost:27017/coursecraft
-# OR use MongoDB Atlas
-# MONGO_URI=mongodb+srv://<username>:<password>@cluster.mongodb.net/coursecraft
+MONGO_URI=mongodb://localhost:27017/couall lessons for course | Yes |
+| POST | `/api/lessons/create/:courseId` | Create new lesson | Yes (Trainer) |
+| DELETE | `/api/lessons/delete/:lessonId` | Delete lesson | Yes (Trainer) |
 
+**Note:** Lesson management separated from course updates for better maintainability.
 # JWT Secret
 JWT_SECRET=your_super_secret_jwt_key_here
 
@@ -541,37 +633,55 @@ LMS/
 │   │   │   ├── CourseCategories.jsx
 │   │   │   ├── EnrolledCourses.jsx
 │   │   │   ├── ExamResults.jsx
-│   │   │   ├── Footer.jsx
-│   │   │   ├── MousePointer.jsx
-│   │   │   ├── MyCertificates.jsx
-│   │   │   ├── Navbar.jsx
-│   │   │   ├── ProtectedRoute.jsx
-│   │   │   ├── ScrollToTopButton.jsx
-│   │   │   ├── Slider.jsx
-│   │   │   ├── Testimonial.jsx
-│   │   │   ├── TrainerCourses.jsx
-│   │   │   ├── TrainerExams.jsx
-│   │   │   ├── UpdateUserDetails.jsx
-│   │   │   ├── UserDetails.jsx
-│   │   │   ├── UsersList.jsx
-│   │   │   └── VideoPlayer.jsx
-│   │   │
-│   │   ├── contexts/
-│   │   │   ├── AdminContext.jsx
-│   │   │   ├── AuthContext.jsx
-│   │   │   ├── CourseContext.jsx
-│   │   │   ├── ExamContext.jsx
-│   │   │   └── UserContext.jsx
-│   │   │
-│   │   ├── hooks/
-│   │   │   └── useNetworkStatus.js
-│   │   │
-│   │   ├── pages/
-│   │   │   ├── AboutUsPage.jsx
-│   │   │   ├── AdminDashboard.jsx
-│   │   │   ├── AdminExamList.jsx
-│   │   │   ├── ChangePassword.jsx
-│   │   │   ├── ContactPage.jsx
+**Terminal 1 - Start MongoDB** (if running locally):
+```bash
+# Windows
+mongod
+
+# macOS/Linux
+sudo systemctl start mongod
+```
+
+**Terminal 2 - Start Backend:**
+```bash
+cd back-end
+npm start
+```
+✅ Server running at `http://localhost:5000`  
+✅ Admin account auto-created: `admin@gmail.com` / `admin`
+
+**Terminal 3 - Start Frontend:**
+```bash
+cd front-end
+npm run dev
+```
+✅ Frontend running at `http://localhost:5173`
+
+### Production Build
+
+```bash
+# Build frontend
+cd front-end
+npm run build
+
+# Output directory: dist/
+# Deploy dist/ to Vercel/Netlify/any static hosting
+
+# Backend deployment
+# Use Render.com, Railway, or any Node.js hosting
+# Co**Password Security**: bcrypt hashing with 10 salt rounds
+- ✅ **JWT Authentication**: Tokens stored in httpOnly cookies (prevents XSS)
+- ✅ **Role-Based Access Control**: Three-tier permission system (Learner, Trainer, Admin)
+- ✅ **Admin Protection**: Admin role cannot be registered publicly (auto-created on startup)
+- ✅ **Protected Routes**: Backend and frontend route protection
+- ✅ **CORS Configuration**: Specific origin whitelisting
+- ✅ **Input Validation**: Server-side validation for all inputs
+- ✅ **File Upload Security**: Type and size restrictions on uploads
+- ✅ **MongoDB Injection Prevention**: Mongoose query sanitization
+- ✅ **Error Handling**: Secure error messages (no sensitive data exposure)ng dedicated buttons on course details page
+5. **Create Exam** for the course
+6. **Enroll** (as Learner) and take exam
+7. **Download Certificate** upon passing │   │   ├── ContactPage.jsx
 │   │   │   ├── CourseDetails.jsx
 │   │   │   ├── CourseForm.jsx
 │   │   │   ├── Courses.jsx
@@ -615,18 +725,46 @@ LMS/
 mongod
 ```
 
-2. **Start Backend**
-```bash
-cd back-end
-npm start
-```
+**Authentication:**
+- [x] User registration (Learner/Trainer only)
+- [x] User login with JWT token
+- [x] Admin auto-creation on server startup
+- [x] Protected route access control
+- [x] Password change functionality
 
-3. **Start Frontend**
-```bash
-cd front-end
-npm run dev
-```
+**Course Management:**
+- [x] Course creation by trainer
+- [x] Course update (without lesson editing)
+- [x] Course deletion
+- [x] Course enrollment by learner
 
+**Lesson Management:**
+- [x] Lesson creation with file upload
+- [x] Lesson deletion with Cloudinary cleanup
+- [x] Video/image playback in lesson viewer
+File Upload Size**: Limited by Cloudinary free tier (25GB storage, 25GB bandwidth/month)
+2. **Email Rate Limits**: Resend free tier limited to 100 emails/day
+3. **Render Free Tier**: Backend may sleep after inactivity (30 seconds cold start)
+4. **Certificate Format**: HTML download only (users can print to PDF from browser)
+5. **Lesson Order**: Manual ordering not yet implemented (displays in creation order
+- [x] Timed exam taking
+- [x] Auto-grading and result calculation
+- [x] Result display with correct answers
+
+**Certificate System:**
+- [x] Certificate generation upon exam pass
+- [x] Certificate download functionality
+
+**Email Service:**
+- [x] Contact form submission
+- [x] Admin notification email
+- [x] User auto-reply email
+- [x] API and SMTP method auto-detection
+
+**Admin Features:**
+- [x] Dashboard statistics
+- [x] User list display
+- [x] Course and exam overview
 4. **Access the application**
 - Frontend: http://localhost:5173
 - Backend API: http://localhost:5000
@@ -640,68 +778,152 @@ npm run build
 
 # The build files will be in front-end/dist
 # Serve them using a static server or integrate with backend
-```
-
----
-
-## 🔒 Security Features
-
-- ✅ Password hashing with bcryptjs
-- ✅ JWT-based authentication
-- ✅ Role-based access control (RBAC)
-- ✅ Protected routes and API endpoints
-- ✅ CORS configuration
-- ✅ Input validation and sanitization
-- ✅ Secure cookie handling
-- ✅ File upload restrictions
-- ✅ MongoDB injection prevention
-
----
-
-## 🧪 Testing
-
-### Manual Testing Checklist
-
-- [ ] User registration and login
-- [ ] Course creation by trainer
-- [ ] Course approval by admin
-- [ ] Course enrollment by learner
-- [ ] Lesson access after enrollment
-- [ ] Exam creation and question addition
-- [ ] Exam taking and submission
-- [ ] Certificate eligibility check (100% completion)
-- [ ] Certificate download functionality
-- [ ] Tabbed profile interface for learners
-- [ ] Admin dashboard statistics
-- [ ] User ban/unban functionality
-
----
-
-## 🐛 Known Issues & Limitations
-
-1. **Mobile Responsiveness**: All pages are responsive but some forms may benefit from further optimization
-2. **File Upload Size**: Limited by Cloudinary free tier constraints
-3. **Certificate Format**: Currently generates HTML certificates (can be printed to PDF by users)
-
----
-
-## 🔮 Future Enhancements
-
+### High Priority
+- [ ] Pagination for courses, exams, and users (performance optimization)
+- [ ] Search and filter functionality (by category, level, trainer)
+- [ ] Lesson reordering (drag-and-drop interface)
 - [ ] Server-side PDF generation for certificates
-- [ ] Certificate preview before download
-- [ ] Certificate sharing on social media
-- [ ] Dark mode toggle for entire application
-- [ ] Real-time notifications using WebSockets
-- [ ] Advanced analytics dashboard for trainers
+- [ ] Progress tracking (lesson completion percentage)
+
+### Medium Priority
 - [ ] Course rating and review system
 - [ ] Discussion forums for courses
-- [ ] Live video streaming for classes
+- [ ] Real-time notifications using WebSockets
+- [ ] Payment gateway integration (Stripe/Razorpay)
+- [ ] Advanced analytics dashboard for trainers
+- [ ] Dark mode toggle
+
+### Long-term Vision
+- [ ] Live video streaming for classes (WebRTC)
 - [ ] Mobile app (React Native)
-- [ ] Multi-language support
-- [ ] AI-powered course recommendations
-- [ ] Gamification features (badges, leaderboards)
-- [ ] Payment gateway integration (Stripe)
-- [ ] Export reports (PDF, Excel)
+- [ ] Multi-language support (i18n)
+- [🚢 Deployment
+
+### Backend Deployment (Render.com)
+
+1. **Create Render Account** and connect GitHub
+2. **New Web Service** → Select repository
+3. **Configuration:**
+   - Build Command: `npm install`
+   - Start Command: `node server.js`
+   - Environment: Node
+4. **Environment Variables:** Add all from `.env` file
+5. **Deploy:** Automatic on git push to master
+
+### Frontend Deployment (Vercel)
+
+1. **Import Project** from GitHub
+2. **Configuration:**
+   - Framework Preset: Vite
+   - Build Command: `npm run build`
+   - Output Directory: `dist`
+3. **Environment Variables:**
+   - `VITE_API_URL=your-render-backend-url`
+4. **Deploy:** Automatic on git push to master
+
+### Database Hosting (MongoDB Atlas)
+
+1. **Create Cluster** (M0 Free Tier)
+2. **Create Database User**
+3. **Network Access:** Allow from anywhere (0.0.0.0/0)
+4. **Get Connection String** and add to backend env vars
+
+### Post-Deployment Steps
+
+1. ✅ Test backend health: `https://your-backend.onrender.com/api/auth/current`
+2. ✅ Verify admin auto-creation in Render logs
+3. ✅ Test frontend connectivity to backend
+4. ✅ Test email service (contact form)
+5. ✅ Test file upload to Cloudinary
+6. ✅ Update CORS origin in backend to frontend URL
+
+---
+
+## 📚 Study Resources
+
+For exam preparation and deep understanding of the project:
+
+📁 **[deployguidefiles/study/](deployguidefiles/study/)**
+- **[PROJECT_WORKFLOW.md](deployguidefiles/study/PROJECT_WORKFLOW.md)**: Complete system architecture, workflows, and technical documentation
+- **[VIVA_QUESTIONS.md](deployguidefiles/study/VIVA_QUESTIONS.md)**: 75+ viva questions with detailed answers covering all technologies
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome!
+
+### How to Contribute
+
+1. **Fork** the repository
+2. **Clone** your fork: `git clone https://github.com/your-username/LMS.git`
+3. **Create branch**: `git checkout -b feature/AmazingFeature`
+4. **Commit changes**: `git commit -m 'Add some AmazingFeature'`
+5. **Push to branch**: `git push origin feature/AmazingFeature`
+6. **Open Pull Request**
+
+### Code Style Guidelines
+
+- Follow existing code structure
+- Use ESLint configuration provided
+- Comment complex logic
+- Test before submitting PR
+- Follow React and Node.js best practices
+
+---
+
+## 📄 License
+
+This project is open source and available for educational purposes.
+
+---
+
+## 👨‍💻 Author
+
+**Divanshu Singla**
+
+- GitHub: [@Divanshu-Singla](https://github.com/Divanshu-Singla)
+- Email: divanshusingl2005@gmail.com
+
+---
+
+## 🙏 Acknowledgments
+
+Special thanks to:
+
+- **MongoDB** for robust NoSQL database solution
+- **Cloudinary** for seamless media CDN and storage
+- **Resend** for reliable email API service
+- **Render & Vercel** for free hosting services
+- **React & Node.js** communities for excellent documentation
+- **Express.js** for minimalist web framework
+- **Framer Motion** for beautiful animations
+- **Vite** for lightning-fast build tool
+
+---
+
+## 📊 Project Status
+
+**Current Version**: 1.0.0  
+**Status**: ✅ Production Ready  
+**Last Updated**: December 21, 2025  
+**Live Since**: December 2025
+
+---
+
+## 📞 Support
+
+If you have any questions or need help:
+
+1. 📧 Email: divanshusingl2005@gmail.com
+2. 🐛 Issues: [GitHub Issues](https://github.com/Divanshu-Singla/LMS/issues)
+3. 📚 Documentation: Check `deployguidefiles/study/` folder
+
+---
+
+**⭐ If you find this project useful, please give it a star!**
+
+**Made with ❤️ for better online education
 
 ---
 
