@@ -243,21 +243,6 @@ const CourseDetails = () => {
                           </div>
                         </div>
                       );
-                                {lesson.videoUrl && (
-                                  <span className="text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded">
-                                    📹 Video
-                                  </span>
-                                )}
-                                {lesson.imageUrl && (
-                                  <span className="text-xs bg-green-100 text-green-700 px-2 py-0.5 rounded">
-                                    🖼️ Image
-                                  </span>
-                                )}
-                              </div>
-                            </div>
-                          </div>
-                        </div>
-                      );
                     })}
                   </div>
                 </div>
