@@ -34,12 +34,11 @@ const { upload } = require("../middlewares/multerConfig");
 
 const router = express.Router();
 
-// ✅ Create Lesson for a Course (Trainer Only)
-
+// ✅ Create Lesson for a Course (Trainer and Admin)
 router.post(
   "/create/:courseId",
-  protect(["trainer"]),
-  upload.single("video"),   // ✅ works now
+  protect(["trainer", "admin"]),
+  upload.single("video"),
   createLesson
 );
 

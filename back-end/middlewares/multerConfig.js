@@ -8,7 +8,7 @@ const storage = new CloudinaryStorage({
   cloudinary: cloudinary,
   params: async (req, file) => {
     let folder = "general_uploads";
-    let resourceType = "raw"; // Cloudinary treats CSV as "raw" files
+    let resourceType = "raw";
 
     if (file.mimetype.startsWith("image/")) {
       folder = req.baseUrl.includes("/courses") ? "course_images" : "user_profiles";
@@ -24,9 +24,10 @@ const storage = new CloudinaryStorage({
       folder = "lesson_videos";
       return {
         folder,
-        format: "mp4",
         public_id: `${uuidv4()}-${file.originalname}`,
-        resource_type: "video"
+        resource_type: "video",
+        chunk_size: 6000000, // 6MB chunks for large videos
+        timeout: 120000 // 2 minutes timeout
       };
     }
 
@@ -41,7 +42,7 @@ const storage = new CloudinaryStorage({
     }
 
     if (file.mimetype === "text/csv") {
-      folder = "exam_questions"; // Store CSV files in a dedicated folder
+      folder = "exam_questions";
       return {
         folder,
         format: "csv",
@@ -58,7 +59,19 @@ const storage = new CloudinaryStorage({
 
 const upload = multer({
   storage: storage,
-  limits: { fileSize: 100 * 1024 * 1024 }, // 100 MB
+  limits: { 
+    fileSize: 100 * 1024 * 1024, // 100 MB
+  },
+  fileFilter: (req, file, cb) => {
+    // Accept images and videos
+    if (file.mimetype.startsWith('image/') || 
+        file.mimetype.startsWith('video/') || 
+        file.mimetype === 'text/csv') {
+      cb(null, true);
+    } else {
+      cb(new Error('Only images, videos, and CSV files are allowed'), false);
+    }
+  }
 });
 
 module.exports = {

@@ -8,13 +8,25 @@ const createLesson = async (req, res) => {
     try {
         console.log("➕ Create Lesson - Request Body:", req.body);
         console.log("📁 Create Lesson - File:", req.file);
+        console.log("👤 Create Lesson - User:", req.user);
         
         const { courseId } = req.params;
+        console.log("🆔 Course ID:", courseId);
+        
         const { title, description, order } = req.body;
+
+        // ✅ Validate ObjectId
+        if (!mongoose.Types.ObjectId.isValid(courseId)) {
+            console.log("❌ Invalid course ID format");
+            return res.status(400).json({ 
+                success: false, 
+                message: "Invalid course ID format" 
+            });
+        }
 
         // ✅ Validate required fields
         if (!title || !description) {
-            console.log("❌ Missing required fields");
+            console.log("❌ Missing required fields - Title:", title, "Description:", description);
             return res.status(400).json({ 
                 success: false, 
                 message: "Title and description are required" 
@@ -78,10 +90,14 @@ const createLesson = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Create Lesson Error:", error);
+        console.error("❌ Create Lesson Error:");
+        console.error("Error Message:", error.message);
+        console.error("Error Stack:", error.stack);
+        console.error("Error Name:", error.name);
         return res.status(500).json({ 
             success: false, 
-            message: error.message 
+            message: error.message || "Internal server error",
+            error: process.env.NODE_ENV === "development" ? error.stack : undefined
         });
     }
 };
