@@ -267,8 +267,8 @@ const updateCourse = async (req, res) => {
             return res.status(400).json({ message: "Course ID is required" });
         }
 
-        // ✅ Find course
-        const course = await Course.findById(courseId).populate("lessons");
+        // ✅ Find course (populate to get lesson details if needed for display, but use IDs for updates)
+        const course = await Course.findById(courseId);
         if (!course) {
             return res.status(404).json({ message: "Course not found" });
         }
@@ -412,7 +412,7 @@ const updateCourse = async (req, res) => {
         
         // Step 5: Delete lessons that were removed (not in keptLessonIds)
         const existingLessonIds = course.lessons.map(id => id.toString());
-        const keptLessonIdsStr = keptLessonIds.map(id => id.toString());
+        const keptLessonIdsStr = keptLessonIds.map(id => id ? id.toString() : null).filter(Boolean);
         const lessonsToDelete = existingLessonIds.filter(id => !keptLessonIdsStr.includes(id));
         
         if (lessonsToDelete.length > 0) {
