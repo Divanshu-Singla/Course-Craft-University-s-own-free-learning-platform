@@ -326,99 +326,103 @@ const updateCourse = async (req, res) => {
             }
         });
         
-        // Build lesson objects from parsed indices
-        Array.from(lessonIndices).sort().forEach(index => {
-            const lessonData = {
-                index: index,
-                _id: req.body[`lessons[${index}][_id]`] || null,
-                title: req.body[`lessons[${index}][title]`] || '',
-                description: req.body[`lessons[${index}][description]`] || '',
-                videoUrl: req.body[`lessons[${index}][videoUrl]`] || null,
-                imageUrl: req.body[`lessons[${index}][imageUrl]`] || null,
-            };
-            lessonUpdates.push(lessonData);
-        });
-        
-        // Step 2: Process file uploads and map to lessons
-        const filesByIndex = {};
-        if (req.files && Array.isArray(req.files)) {
-            req.files.forEach(file => {
-                const match = file.fieldname.match(/lessonVideos\[(\d+)\]/);
-                if (match) {
-                    filesByIndex[match[1]] = file;
-                }
+        // Only process lessons if lesson data was sent in the request
+        if (lessonIndices.size > 0) {
+            // Build lesson objects from parsed indices
+            Array.from(lessonIndices).sort().forEach(index => {
+                const lessonData = {
+                    index: index,
+                    _id: req.body[`lessons[${index}][_id]`] || null,
+                    title: req.body[`lessons[${index}][title]`] || '',
+                    description: req.body[`lessons[${index}][description]`] || '',
+                    videoUrl: req.body[`lessons[${index}][videoUrl]`] || null,
+                    imageUrl: req.body[`lessons[${index}][imageUrl]`] || null,
+                };
+                lessonUpdates.push(lessonData);
             });
-        }
-        
-        // Step 3: Track which lessons to keep
-        const keptLessonIds = [];
-        
-        // Step 4: Process each lesson update
-        for (const lessonData of lessonUpdates) {
-            const newFile = filesByIndex[lessonData.index];
             
-            if (lessonData._id) {
-                // UPDATING EXISTING LESSON
-                const updateData = {
-                    title: lessonData.title,
-                    description: lessonData.description
-                };
-                
-                // Handle new file upload
-                if (newFile) {
-                    if (newFile.mimetype.startsWith('video/')) {
-                        updateData.videoUrl = newFile.path;
-                        updateData.imageUrl = null; // Clear image when uploading video
-                    } else if (newFile.mimetype.startsWith('image/')) {
-                        updateData.imageUrl = newFile.path;
-                        updateData.videoUrl = null; // Clear video when uploading image
+            // Step 2: Process file uploads and map to lessons
+            const filesByIndex = {};
+            if (req.files && Array.isArray(req.files)) {
+                req.files.forEach(file => {
+                    const match = file.fieldname.match(/lessonVideos\[(\d+)\]/);
+                    if (match) {
+                        filesByIndex[match[1]] = file;
                     }
+                });
+            }
+            
+            // Step 3: Track which lessons to keep
+            const keptLessonIds = [];
+            
+            // Step 4: Process each lesson update
+            for (const lessonData of lessonUpdates) {
+                const newFile = filesByIndex[lessonData.index];
+                
+                if (lessonData._id) {
+                    // UPDATING EXISTING LESSON
+                    const updateData = {
+                        title: lessonData.title,
+                        description: lessonData.description
+                    };
+                    
+                    // Handle new file upload
+                    if (newFile) {
+                        if (newFile.mimetype.startsWith('video/')) {
+                            updateData.videoUrl = newFile.path;
+                            updateData.imageUrl = null; // Clear image when uploading video
+                        } else if (newFile.mimetype.startsWith('image/')) {
+                            updateData.imageUrl = newFile.path;
+                            updateData.videoUrl = null; // Clear video when uploading image
+                        }
+                    } else {
+                        // No new file - preserve existing media from form data
+                        if (lessonData.videoUrl) updateData.videoUrl = lessonData.videoUrl;
+                        if (lessonData.imageUrl) updateData.imageUrl = lessonData.imageUrl;
+                    }
+                    
+                    // Update the lesson
+                    await Lesson.findByIdAndUpdate(lessonData._id, updateData, { new: true });
+                    keptLessonIds.push(lessonData._id);
+                    
                 } else {
-                    // No new file - preserve existing media from form data
-                    if (lessonData.videoUrl) updateData.videoUrl = lessonData.videoUrl;
-                    if (lessonData.imageUrl) updateData.imageUrl = lessonData.imageUrl;
-                }
-                
-                // Update the lesson
-                await Lesson.findByIdAndUpdate(lessonData._id, updateData, { new: true });
-                keptLessonIds.push(lessonData._id);
-                
-            } else {
-                // CREATING NEW LESSON
-                const newLessonData = {
-                    course: courseId,
-                    title: lessonData.title || 'Untitled Lesson',
-                    description: lessonData.description || '',
-                    videoUrl: null,
-                    imageUrl: null
-                };
-                
-                // Add file if uploaded
-                if (newFile) {
-                    if (newFile.mimetype.startsWith('video/')) {
-                        newLessonData.videoUrl = newFile.path;
-                    } else if (newFile.mimetype.startsWith('image/')) {
-                        newLessonData.imageUrl = newFile.path;
+                    // CREATING NEW LESSON
+                    const newLessonData = {
+                        course: courseId,
+                        title: lessonData.title || 'Untitled Lesson',
+                        description: lessonData.description || '',
+                        videoUrl: null,
+                        imageUrl: null
+                    };
+                    
+                    // Add file if uploaded
+                    if (newFile) {
+                        if (newFile.mimetype.startsWith('video/')) {
+                            newLessonData.videoUrl = newFile.path;
+                        } else if (newFile.mimetype.startsWith('image/')) {
+                            newLessonData.imageUrl = newFile.path;
+                        }
                     }
+                    
+                    const newLesson = new Lesson(newLessonData);
+                    await newLesson.save();
+                    
+                    course.lessons.push(newLesson._id);
+                    keptLessonIds.push(newLesson._id.toString());
                 }
-                
-                const newLesson = new Lesson(newLessonData);
-                await newLesson.save();
-                
-                course.lessons.push(newLesson._id);
-                keptLessonIds.push(newLesson._id.toString());
+            }
+            
+            // Step 5: Delete lessons that were removed (not in keptLessonIds)
+            const existingLessonIds = course.lessons.map(id => id.toString());
+            const keptLessonIdsStr = keptLessonIds.map(id => id ? id.toString() : null).filter(Boolean);
+            const lessonsToDelete = existingLessonIds.filter(id => !keptLessonIdsStr.includes(id));
+            
+            if (lessonsToDelete.length > 0) {
+                await Lesson.deleteMany({ _id: { $in: lessonsToDelete } });
+                course.lessons = course.lessons.filter(id => keptLessonIdsStr.includes(id.toString()));
             }
         }
-        
-        // Step 5: Delete lessons that were removed (not in keptLessonIds)
-        const existingLessonIds = course.lessons.map(id => id.toString());
-        const keptLessonIdsStr = keptLessonIds.map(id => id ? id.toString() : null).filter(Boolean);
-        const lessonsToDelete = existingLessonIds.filter(id => !keptLessonIdsStr.includes(id));
-        
-        if (lessonsToDelete.length > 0) {
-            await Lesson.deleteMany({ _id: { $in: lessonsToDelete } });
-            course.lessons = course.lessons.filter(id => keptLessonIdsStr.includes(id.toString()));
-        }
+        // If no lesson data in request, don't touch lessons at all
         
         // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
         const { lessons: _, ...safeUpdates } = updates;
