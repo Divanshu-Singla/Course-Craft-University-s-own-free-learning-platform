@@ -23,7 +23,19 @@ const createCourse = async (req, res) => {
         }
 
         // ✅ Get Cloudinary URL from uploaded file (already uploaded by multer-storage-cloudinary)
-        const thumbnail = req.files?.thumbnail?.[0]?.path || null;
+        let thumbnail = null;
+        
+        // Handle both upload.fields() and upload.any() formats
+        if (req.files) {
+            if (Array.isArray(req.files)) {
+                // upload.any() format - flat array
+                const thumbnailFile = req.files.find(f => f.fieldname === 'thumbnail');
+                thumbnail = thumbnailFile?.path || null;
+            } else {
+                // upload.fields() format - grouped by field name
+                thumbnail = req.files?.thumbnail?.[0]?.path || null;
+            }
+        }
 
         // ✅ Validate Inputs
         if (!title || !description || !category || !duration || !courseLevel || !thumbnail) {
@@ -70,14 +82,25 @@ const createCourse = async (req, res) => {
                 let videoUrl = null;
                 let imageUrl = null;
                 
-                if (req.files?.lessonVideos && req.files.lessonVideos[i]) {
-                    const file = req.files.lessonVideos[i];
+                // Handle both upload.fields() and upload.any() formats
+                if (req.files) {
+                    let file = null;
                     
-                    // file.path already contains the Cloudinary URL
-                    if (file.mimetype.startsWith('video/')) {
-                        videoUrl = file.path;
-                    } else if (file.mimetype.startsWith('image/')) {
-                        imageUrl = file.path;
+                    if (Array.isArray(req.files)) {
+                        // upload.any() format - find file by fieldname
+                        file = req.files.find(f => f.fieldname === `lessonVideos[${i}]` || f.fieldname === 'lessonVideos');
+                    } else if (req.files.lessonVideos) {
+                        // upload.fields() format
+                        file = req.files.lessonVideos[i];
+                    }
+                    
+                    if (file) {
+                        // file.path already contains the Cloudinary URL
+                        if (file.mimetype.startsWith('video/')) {
+                            videoUrl = file.path;
+                        } else if (file.mimetype.startsWith('image/')) {
+                            imageUrl = file.path;
+                        }
                     }
                 }
 
