@@ -279,25 +279,17 @@ const updateCourse = async (req, res) => {
         }
 
         // ✅ Handle thumbnail upload if provided
-        if (req.files?.thumbnail) {
-            const file = req.files.thumbnail[0];
-
-            // Upload new thumbnail to Cloudinary
-            const uploadResponse = await cloudinary.uploader.upload(file.path, {
-                folder: "course_thumbnails"
-            });
-
-            // Delete old thumbnail if it exists
-            if (course.thumbnail) {
-                try {
-                    const oldPublicId = course.thumbnail.split("/").pop().split(".")[0];
-                    await cloudinary.uploader.destroy(`course_thumbnails/${oldPublicId}`);
-                } catch (error) {
-                    console.error("Failed to delete old thumbnail:", error);
-                }
-            }
-
-            updates.thumbnail = uploadResponse.secure_url;
+        let thumbnailFile = null;
+        if (req.files && Array.isArray(req.files)) {
+            thumbnailFile = req.files.find(f => f.fieldname === 'thumbnail');
+        } else if (req.files?.thumbnail) {
+            thumbnailFile = req.files.thumbnail[0];
+        }
+        
+        if (thumbnailFile) {
+            // Thumbnail is already uploaded to Cloudinary by multer-storage-cloudinary
+            // Just use the path directly
+            updates.thumbnail = thumbnailFile.path;
         }
 
         // ✅ Handle syllabus update
@@ -406,6 +398,9 @@ const updateCourse = async (req, res) => {
         const { lessons: _, ...safeUpdates } = updates;
         Object.assign(course, safeUpdates);
         const updatedCourse = await course.save();
+        
+        // Populate lessons to return full course data
+        await updatedCourse.populate('lessons');
 
         return res.status(200).json({
             message: "Course updated successfully",
@@ -414,6 +409,7 @@ const updateCourse = async (req, res) => {
 
     } catch (error) {
         console.error("Error updating course:", error);
+        console.error("Error stack:", error.stack);
         return res.status(500).json({ message: "Failed to update course", error: error.message });
     }
 };
