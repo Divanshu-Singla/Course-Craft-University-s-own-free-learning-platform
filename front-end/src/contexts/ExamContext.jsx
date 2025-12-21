@@ -12,7 +12,7 @@ export const useExam = () => {
   return context;
 };
 
-const API_BASE_URL = "/api/exams";
+const API_BASE_URL = `${import.meta.env.VITE_API_URL || '/api'}/exams`;
 
 const isTokenValid = (token) => {
   try {

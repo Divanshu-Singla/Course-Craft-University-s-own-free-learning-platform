@@ -12,7 +12,7 @@ export const useUser = () => {
   return context;
 };
 
-const API_URL = "/api/users";
+const API_URL = `${import.meta.env.VITE_API_URL || '/api'}/users`;
 
 export const UserProvider = ({ children }) => {
   const storedUser = Cookies.get("user") ? JSON.parse(Cookies.get("user")) : null;

@@ -12,7 +12,7 @@ export const useCourse = () => {
   return context;
 };
 
-const API_URL = "/api/courses";
+const API_URL = `${import.meta.env.VITE_API_URL || '/api'}/courses`;
 
 export const CourseProvider = ({ children }) => {
   const [courses, setCourses] = useState([]);
