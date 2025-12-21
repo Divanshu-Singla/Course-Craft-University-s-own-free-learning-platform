@@ -348,25 +348,24 @@ const updateCourse = async (req, res) => {
 
                     // Upload new video or image
                     if (file.mimetype.startsWith('video/')) {
-                        newVideoUrl = file.path;
+                        newVideoUrl = file.path; // Already uploaded by Cloudinary storage
                     } else if (file.mimetype.startsWith('image/')) {
-                        newImageUrl = file.path;
+                        newImageUrl = file.path; // Already uploaded by Cloudinary storage
                     }
 
                     if (lesson._id) {
                         // Update existing lesson
                         keptLessonIds.add(lesson._id);
-                        const updateData = { 
-                            title: lesson.title || 'Untitled', 
-                            description: lesson.description || '' 
-                        };
+                        const updateData = {};
+                        if (lesson.title) updateData.title = lesson.title;
+                        if (lesson.description) updateData.description = lesson.description;
                         if (newVideoUrl) {
                             updateData.videoUrl = newVideoUrl;
-                            updateData.imageUrl = null;
+                            updateData.imageUrl = null; // Clear image if uploading video
                         }
                         if (newImageUrl) {
                             updateData.imageUrl = newImageUrl;
-                            updateData.videoUrl = null;
+                            updateData.videoUrl = null; // Clear video if uploading image
                         }
                         
                         await Lesson.findByIdAndUpdate(lesson._id, updateData);
@@ -394,21 +393,20 @@ const updateCourse = async (req, res) => {
                 const lesson = lessonData[index];
                 
                 if (lesson._id) {
-                    // Update existing lesson - ALWAYS add to kept IDs first
+                    // Update existing lesson (text fields, preserve existing media)
                     keptLessonIds.add(lesson._id);
-                    
-                    const updateData = {
-                        title: lesson.title || 'Untitled',
-                        description: lesson.description || ''
-                    };
-                    
-                    // Preserve existing media URLs if provided
+                    const updateData = {};
+                    if (lesson.title) updateData.title = lesson.title;
+                    if (lesson.description) updateData.description = lesson.description;
+                    // Preserve existing videoUrl or imageUrl from req.body
                     if (lesson.videoUrl) updateData.videoUrl = lesson.videoUrl;
                     if (lesson.imageUrl) updateData.imageUrl = lesson.imageUrl;
                     
-                    await Lesson.findByIdAndUpdate(lesson._id, updateData);
+                    if (Object.keys(updateData).length > 0) {
+                        await Lesson.findByIdAndUpdate(lesson._id, updateData);
+                    }
                 } else {
-                    // Create new lesson without media
+                    // Create new lesson without media (text only)
                     const newLesson = new Lesson({
                         course: courseId,
                         title: lesson.title || 'Untitled Lesson',
@@ -434,25 +432,20 @@ const updateCourse = async (req, res) => {
         // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
         const { lessons: _, ...safeUpdates } = updates;
         Object.assign(course, safeUpdates);
-        await course.save();
+        const updatedCourse = await course.save();
         
         // Populate lessons to return full course data
-        const populatedCourse = await Course.findById(courseId).populate('lessons');
+        await updatedCourse.populate('lessons');
 
         return res.status(200).json({
             message: "Course updated successfully",
-            course: populatedCourse
+            course: updatedCourse
         });
 
     } catch (error) {
         console.error("Error updating course:", error);
         console.error("Error stack:", error.stack);
-        console.error("Error name:", error.name);
-        return res.status(500).json({ 
-            message: "Failed to update course", 
-            error: error.message,
-            stack: process.env.NODE_ENV === 'development' ? error.stack : undefined
-        });
+        return res.status(500).json({ message: "Failed to update course", error: error.message });
     }
 };
 
