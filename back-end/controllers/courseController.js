@@ -313,17 +313,14 @@ const updateCourse = async (req, res) => {
             }
         }
 
-        // ✅ Handle lesson updates - SIMPLIFIED
+        // ✅ Handle NEW lessons only - APPEND ONLY
         const hasLessonData = Object.keys(req.body).some(key => key.startsWith('lessons['));
         
         if (hasLessonData) {
-            console.log('Processing lesson updates...');
+            console.log('Processing new lessons to append...');
             
-            // Collect all lessons from form data
-            const submittedLessons = [];
+            // Parse form data into lessons
             const lessonMap = {};
-            
-            // Parse form data
             Object.keys(req.body).forEach(key => {
                 const match = key.match(/lessons\[(\d+)\]\[(\w+)\]/);
                 if (match) {
@@ -334,11 +331,7 @@ const updateCourse = async (req, res) => {
                 }
             });
             
-            // Convert to array
-            Object.keys(lessonMap).sort().forEach(index => {
-                submittedLessons.push(lessonMap[index]);
-            });
-            
+            const submittedLessons = Object.keys(lessonMap).sort().map(i => lessonMap[i]);
             console.log(`Found ${submittedLessons.length} lessons in form data`);
             
             // Find uploaded files
@@ -350,66 +343,29 @@ const updateCourse = async (req, res) => {
                 });
             }
             
-            const updatedLessonIds = [];
-            
-            // Process each submitted lesson
+            // ONLY create NEW lessons (ones without _id)
             for (let i = 0; i < submittedLessons.length; i++) {
                 const lessonData = submittedLessons[i];
-                const uploadedFile = uploadedFiles[i];
                 
+                // Skip if this lesson already has an _id (existing lesson)
                 if (lessonData._id) {
-                    // UPDATE existing lesson
-                    const update = {
-                        title: lessonData.title,
-                        description: lessonData.description
-                    };
-                    
-                    // Handle media
-                    if (uploadedFile) {
-                        // New file uploaded
-                        if (uploadedFile.mimetype.startsWith('video/')) {
-                            update.videoUrl = uploadedFile.path;
-                            update.imageUrl = null;
-                        } else if (uploadedFile.mimetype.startsWith('image/')) {
-                            update.imageUrl = uploadedFile.path;
-                            update.videoUrl = null;
-                        }
-                    } else {
-                        // No new file - keep existing
-                        if (lessonData.videoUrl) update.videoUrl = lessonData.videoUrl;
-                        if (lessonData.imageUrl) update.imageUrl = lessonData.imageUrl;
-                    }
-                    
-                    await Lesson.findByIdAndUpdate(lessonData._id, update);
-                    updatedLessonIds.push(lessonData._id);
-                    console.log(`Updated lesson ${lessonData._id}`);
-                    
-                } else {
-                    // CREATE new lesson
-                    const newLesson = new Lesson({
-                        course: courseId,
-                        title: lessonData.title || 'Untitled',
-                        description: lessonData.description || '',
-                        videoUrl: uploadedFile && uploadedFile.mimetype.startsWith('video/') ? uploadedFile.path : null,
-                        imageUrl: uploadedFile && uploadedFile.mimetype.startsWith('image/') ? uploadedFile.path : null
-                    });
-                    
-                    await newLesson.save();
-                    course.lessons.push(newLesson._id);
-                    updatedLessonIds.push(newLesson._id.toString());
-                    console.log(`Created new lesson ${newLesson._id}`);
+                    console.log(`Skipping existing lesson ${lessonData._id}`);
+                    continue;
                 }
-            }
-            
-            // DELETE lessons not in the submitted list
-            const currentLessonIds = course.lessons.map(id => id.toString());
-            const submittedIds = updatedLessonIds.map(id => id.toString());
-            const toDelete = currentLessonIds.filter(id => !submittedIds.includes(id));
-            
-            if (toDelete.length > 0) {
-                await Lesson.deleteMany({ _id: { $in: toDelete } });
-                course.lessons = course.lessons.filter(id => submittedIds.includes(id.toString()));
-                console.log(`Deleted ${toDelete.length} lessons`);
+                
+                // CREATE new lesson
+                const uploadedFile = uploadedFiles[i];
+                const newLesson = new Lesson({
+                    course: courseId,
+                    title: lessonData.title || 'Untitled',
+                    description: lessonData.description || '',
+                    videoUrl: uploadedFile && uploadedFile.mimetype.startsWith('video/') ? uploadedFile.path : null,
+                    imageUrl: uploadedFile && uploadedFile.mimetype.startsWith('image/') ? uploadedFile.path : null
+                });
+                
+                await newLesson.save();
+                course.lessons.push(newLesson._id);
+                console.log(`Created and appended new lesson ${newLesson._id}`);
             }
         }
         
