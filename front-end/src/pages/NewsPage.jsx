@@ -16,10 +16,10 @@ function NewsPage() {
         setLoading(true);
         setError("");
         try {
-            // Using NewsAPI - free tier (Get your API key from https://newsapi.org/)
-            const API_KEY = "beb432998ae54ffdac2f39bf62b70c27"; // Replace with your API key
+            // Using GNews API - free tier with CORS support (Get your API key from https://gnews.io/)
+            const API_KEY = "7e5689b38b0ecc2d7b8b32e927e019c3"; // Free tier: 100 requests/day
             const response = await axios.get(
-                `https://newsapi.org/v2/top-headlines?category=${category}&language=en&pageSize=20&apiKey=${API_KEY}`
+                `https://gnews.io/api/v4/top-headlines?category=${category}&lang=en&max=20&apikey=${API_KEY}`
             );
             setNews(response.data.articles || []);
             setLoading(false);
