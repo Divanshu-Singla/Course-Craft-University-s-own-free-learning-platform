@@ -314,6 +314,10 @@ const updateCourse = async (req, res) => {
         }
 
         // ✅ Handle lesson updates
+        console.log('=== Starting lesson updates ===');
+        console.log('Request body keys:', Object.keys(req.body));
+        console.log('Request files:', req.files?.length || 0, 'files');
+        
         // Parse lessons from form data
         const lessonData = {};
         
@@ -327,6 +331,8 @@ const updateCourse = async (req, res) => {
                 lessonData[index][field] = req.body[key];
             }
         });
+        
+        console.log('Parsed lesson data:', JSON.stringify(lessonData, null, 2));
 
         // Track which lesson IDs are being kept
         const keptLessonIds = new Set();
@@ -336,6 +342,7 @@ const updateCourse = async (req, res) => {
         
         // Process file uploads first (lessons with new media)
         if (req.files && req.files.length > 0) {
+            console.log('Processing file uploads...');
             for (const file of req.files) {
                 const match = file.fieldname.match(/lessonVideos\[(\d+)\]/);
                 if (match) {
@@ -343,31 +350,32 @@ const updateCourse = async (req, res) => {
                     lessonsWithFiles.add(index);
                     const lesson = lessonData[index] || {};
                     
+                    console.log(`Processing file for lesson index ${index}:`, lesson);
+                    
                     let newVideoUrl = null;
                     let newImageUrl = null;
 
                     // Upload new video or image
                     if (file.mimetype.startsWith('video/')) {
-                        newVideoUrl = file.path; // Already uploaded by Cloudinary storage
+                        newVideoUrl = file.path;
                     } else if (file.mimetype.startsWith('image/')) {
-                        newImageUrl = file.path; // Already uploaded by Cloudinary storage
+                        newImageUrl = file.path;
                     }
 
                     if (lesson._id) {
                         // Update existing lesson
                         keptLessonIds.add(lesson._id);
-                        const updateData = {};
-                        if (lesson.title) updateData.title = lesson.title;
-                        if (lesson.description) updateData.description = lesson.description;
+                        const updateData = { title: lesson.title, description: lesson.description };
                         if (newVideoUrl) {
                             updateData.videoUrl = newVideoUrl;
-                            updateData.imageUrl = null; // Clear image if uploading video
+                            updateData.imageUrl = null;
                         }
                         if (newImageUrl) {
                             updateData.imageUrl = newImageUrl;
-                            updateData.videoUrl = null; // Clear video if uploading image
+                            updateData.videoUrl = null;
                         }
                         
+                        console.log(`Updating lesson ${lesson._id}:`, updateData);
                         await Lesson.findByIdAndUpdate(lesson._id, updateData);
                     } else {
                         // Create new lesson
@@ -380,6 +388,7 @@ const updateCourse = async (req, res) => {
                         });
 
                         await newLesson.save();
+                        console.log(`Created new lesson with media:`, newLesson._id);
                         course.lessons.push(newLesson._id);
                         keptLessonIds.add(newLesson._id.toString());
                     }
@@ -388,25 +397,30 @@ const updateCourse = async (req, res) => {
         }
         
         // Handle lessons without new files (text-only updates or existing media preserved)
+        console.log('Processing lessons without new files...');
         for (const index in lessonData) {
             if (!lessonsWithFiles.has(index)) {
                 const lesson = lessonData[index];
+                console.log(`Processing lesson index ${index}:`, lesson);
                 
                 if (lesson._id) {
-                    // Update existing lesson (text fields, preserve existing media)
+                    // Update existing lesson - ALWAYS add to kept IDs first
                     keptLessonIds.add(lesson._id);
-                    const updateData = {};
-                    if (lesson.title) updateData.title = lesson.title;
-                    if (lesson.description) updateData.description = lesson.description;
-                    // Preserve existing videoUrl or imageUrl from req.body
+                    console.log(`Keeping existing lesson: ${lesson._id}`);
+                    
+                    const updateData = {
+                        title: lesson.title,
+                        description: lesson.description
+                    };
+                    
+                    // Preserve existing media URLs if provided
                     if (lesson.videoUrl) updateData.videoUrl = lesson.videoUrl;
                     if (lesson.imageUrl) updateData.imageUrl = lesson.imageUrl;
                     
-                    if (Object.keys(updateData).length > 0) {
-                        await Lesson.findByIdAndUpdate(lesson._id, updateData);
-                    }
+                    console.log(`Updating lesson ${lesson._id}:`, updateData);
+                    await Lesson.findByIdAndUpdate(lesson._id, updateData);
                 } else {
-                    // Create new lesson without media (text only)
+                    // Create new lesson without media
                     const newLesson = new Lesson({
                         course: courseId,
                         title: lesson.title || 'Untitled Lesson',
@@ -414,6 +428,7 @@ const updateCourse = async (req, res) => {
                     });
 
                     await newLesson.save();
+                    console.log(`Created new lesson without media:`, newLesson._id);
                     course.lessons.push(newLesson._id);
                     keptLessonIds.add(newLesson._id.toString());
                 }
@@ -424,9 +439,14 @@ const updateCourse = async (req, res) => {
         const existingLessonIds = course.lessons.map(id => id.toString());
         const lessonsToDelete = existingLessonIds.filter(id => !keptLessonIds.has(id));
         
+        console.log('Existing lesson IDs:', existingLessonIds);
+        console.log('Kept lesson IDs:', Array.from(keptLessonIds));
+        console.log('Lessons to delete:', lessonsToDelete);
+        
         if (lessonsToDelete.length > 0) {
             await Lesson.deleteMany({ _id: { $in: lessonsToDelete } });
             course.lessons = course.lessons.filter(id => !lessonsToDelete.includes(id.toString()));
+            console.log(`Deleted ${lessonsToDelete.length} lessons`);
         }
         
         // ✅ Apply partial updates (exclude lessons array to prevent overwriting)
