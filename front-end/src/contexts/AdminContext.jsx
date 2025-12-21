@@ -28,7 +28,7 @@ export const AdminProvider = ({ children }) => {
       const token = Cookies.get('token');
       console.log("Token:", token ? "Present" : "Missing");
       
-      const response = await axios.get("http://localhost:5000/api/admin/stats", {
+      const response = await axios.get("/api/admin/stats", {
         headers: { Authorization: `Bearer ${token}` },
         withCredentials: true,
       });

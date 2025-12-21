@@ -35,7 +35,8 @@ const LessonViewer = () => {
   const fetchProgress = async () => {
     try {
       const token = Cookies.get("token");
-      const response = await axios.get(`http://localhost:5000/api/users/progress/${id}`, {
+      const API_URL = import.meta.env.VITE_API_URL || '/api';
+      const response = await axios.get(`${API_URL}/users/progress/${id}`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setCourseProgress(response.data.progress);
@@ -48,7 +49,7 @@ const LessonViewer = () => {
     try {
       const token = Cookies.get("token");
       await axios.post(
-        "http://localhost:5000/api/users/progress/lesson-complete",
+        `${API_URL}/users/progress/lesson-complete`,
         { courseId: id, lessonId },
         { headers: { Authorization: `Bearer ${token}` } }
       );

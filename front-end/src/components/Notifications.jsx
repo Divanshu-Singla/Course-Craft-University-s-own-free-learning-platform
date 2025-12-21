@@ -13,7 +13,7 @@ const Notifications = () => {
   const fetchNotifications = async () => {
     try {
       const token = Cookies.get("token");
-      const response = await axios.get("http://localhost:5000/api/users/notifications/all", {
+      const response = await axios.get("/api/users/notifications/all", {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNotifications(response.data.notifications || []);
@@ -28,7 +28,7 @@ const Notifications = () => {
     try {
       const token = Cookies.get("token");
       await axios.patch(
-        `http://localhost:5000/api/users/notifications/${notificationId}/read`,
+        `/api/users/notifications/${notificationId}/read`,
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -45,7 +45,7 @@ const Notifications = () => {
     try {
       const token = Cookies.get("token");
       await axios.patch(
-        "http://localhost:5000/api/users/notifications/mark-all-read",
+        "/api/users/notifications/mark-all-read",
         {},
         { headers: { Authorization: `Bearer ${token}` } }
       );
@@ -60,7 +60,7 @@ const Notifications = () => {
     try {
       const token = Cookies.get("token");
       await axios.delete(
-        `http://localhost:5000/api/users/notifications/${notificationId}`,
+        `/api/users/notifications/${notificationId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       

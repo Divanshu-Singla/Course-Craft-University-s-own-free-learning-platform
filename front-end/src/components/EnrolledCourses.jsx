@@ -22,7 +22,7 @@ const EnrolledCourses = ({ enrolledCourses }) => {
 
       const progressPromises = enrolledCourses.map(async (course) => {
         try {
-          const response = await axios.get(`http://localhost:5000/api/users/progress/${course._id}`, {
+          const response = await axios.get(`/api/users/progress/${course._id}`, {
             headers: { Authorization: `Bearer ${token}` }
           });
           console.log(`Progress for ${course.title}:`, response.data.progress);

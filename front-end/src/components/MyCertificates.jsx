@@ -23,7 +23,7 @@ const MyCertificates = ({ enrolledCourses }) => {
         enrolledCourses.map(async (course) => {
           try {
             const response = await axios.get(
-              `http://localhost:5000/api/certificates/check/${course._id}`,
+              `/api/certificates/check/${course._id}`,
               {
                 headers: { Authorization: `Bearer ${token}` }
               }
@@ -57,7 +57,7 @@ const MyCertificates = ({ enrolledCourses }) => {
     try {
       const token = Cookies.get('token');
       const response = await axios.get(
-        `http://localhost:5000/api/certificates/generate/${courseId}`,
+        `/api/certificates/generate/${courseId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'text'

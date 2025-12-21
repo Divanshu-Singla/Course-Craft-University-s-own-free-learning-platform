@@ -19,7 +19,7 @@ const CertificateButton = ({ courseId, courseName }) => {
       console.log('Token exists:', !!token);
       
       const response = await axios.get(
-        `http://localhost:5000/api/certificates/check/${courseId}`,
+        `/api/certificates/check/${courseId}`,
         {
           headers: { Authorization: `Bearer ${token}` }
         }
@@ -40,7 +40,7 @@ const CertificateButton = ({ courseId, courseName }) => {
     try {
       const token = Cookies.get('token');
       const response = await axios.get(
-        `http://localhost:5000/api/certificates/generate/${courseId}`,
+        `/api/certificates/generate/${courseId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
           responseType: 'text'
