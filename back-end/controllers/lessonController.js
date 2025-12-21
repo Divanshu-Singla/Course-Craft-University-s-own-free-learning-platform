@@ -181,11 +181,13 @@ const deleteLesson = async (req, res) => {
             }
         }
 
-        // ✅ Remove lesson from course
+        // ✅ Remove lesson from course (also clean up any null references)
         console.log("📝 Removing lesson from course.lessons array");
+        console.log("📋 Current lessons array:", course.lessons);
         course.lessons = course.lessons.filter(
-            lessonRef => lessonRef.toString() !== lessonId
+            lessonRef => lessonRef && lessonRef.toString() !== lessonId
         );
+        console.log("📋 Updated lessons array:", course.lessons);
         await course.save();
         console.log("✅ Course updated");
 
