@@ -1,6 +1,7 @@
 const Lesson = require("../models/Lesson");
 const Course = require("../models/Course");
 const cloudinary = require("../config/cloudinary");
+const mongoose = require("mongoose");
 
 // ✅ Create Lesson for a Course (Trainer Only)
 const createLesson = async (req, res) => {
@@ -89,7 +90,17 @@ const createLesson = async (req, res) => {
 const deleteLesson = async (req, res) => {
     try {
         console.log("🗑️ Delete Lesson - Lesson ID:", req.params.lessonId);
+        console.log("👤 User:", req.user);
         const { lessonId } = req.params;
+
+        // ✅ Validate ObjectId
+        if (!mongoose.Types.ObjectId.isValid(lessonId)) {
+            console.log("❌ Invalid lesson ID format");
+            return res.status(400).json({ 
+                success: false, 
+                message: "Invalid lesson ID format" 
+            });
+        }
 
         // ✅ Find lesson
         const lesson = await Lesson.findById(lessonId);
@@ -189,10 +200,14 @@ const deleteLesson = async (req, res) => {
         });
 
     } catch (error) {
-        console.error("❌ Delete Lesson Error:", error);
+        console.error("❌ Delete Lesson Error:");
+        console.error("Error Message:", error.message);
+        console.error("Error Stack:", error.stack);
+        console.error("Error Name:", error.name);
         return res.status(500).json({ 
             success: false, 
-            message: error.message 
+            message: error.message || "Internal server error",
+            error: process.env.NODE_ENV === "development" ? error.stack : undefined
         });
     }
 };

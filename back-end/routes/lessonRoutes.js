@@ -54,7 +54,7 @@ router.post(
 // ✅ Delete Lesson by ID (Trainer Only)
 router.delete(
     "/delete/:lessonId",
-    protect(["trainer"]),
+    protect(["trainer", "admin"]),
     deleteLesson
 );
 
